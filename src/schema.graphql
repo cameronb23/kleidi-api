@@ -1,0 +1,48 @@
+scalar DateTime
+scalar Integer
+
+type Query {
+  info: String!
+  users: [User!]!
+  roles: [Role]!
+}
+
+type Mutation {
+  createUser(email: String!, password: String!, name: String!): User!
+  registerUser(email: String!, password: String!, name: String!): AuthPayload!
+  login(email: String!, password: String!): AuthPayload!
+  
+  createRole(name: String!, permissions: String): Role!
+  updateRole(id: ID!, name: String, permissions: String): Role!
+  deleteRole(id: ID!): OperationResponse!
+}
+
+type Role {
+  id: ID!
+  createdAt: DateTime!
+  permissions: String
+  name: String!
+  attachedTo: [User]
+}
+
+type User {
+  id: ID!
+  createdAt: DateTime!
+  email: String!
+  salt: String!
+  password: String!
+  name: String!
+  roles: [Role]
+}
+
+type OperationResponse {
+  status: Integer!
+  error: String
+  message: String
+}
+
+type AuthPayload {
+  error: String
+  token: String
+  user: User
+}

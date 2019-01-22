@@ -1,0 +1,45 @@
+{
+  "name": "kleidi-api",
+  "version": "0.0.01",
+  "description": "kleidi backend",
+  "main": "src/index.js",
+  "repository": "https://github.com/cameronb23/kleidi-api",
+  "author": "cameronb23",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha --require @babel/register --timeout 10000",
+    "build-babel": "babel -d ./build ./src -s",
+    "clean": "rm -rf build && mkdir build",
+    "start": "npm run build && node ./build/index.js",
+    "lint": "eslint ./src/*.js",
+    "build": "npm run clean && npm run build-babel",
+    "dev": "cross-env nodemon -e js,graphql --exec \"npm run lint && babel-node src/index.js\""
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.2.5",
+    "async": "^2.6.1",
+    "bcrypt-nodejs": "^0.0.3",
+    "bluebird": "^3.5.3",
+    "graphql-shield": "^5.1.0",
+    "graphql-yoga": "^1.17.0",
+    "jsonwebtoken": "^8.4.0",
+    "prisma-client-lib": "^1.24.0",
+    "underscore": "^1.9.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.3.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-http": "^4.2.1",
+    "cross-env": "^5.2.0",
+    "dotenv": "^6.2.0",
+    "eslint": "^5.12.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.9"
+  }
+}
