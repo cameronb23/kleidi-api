@@ -21,6 +21,10 @@ dotenv.config();
 
 const SCHEMA_PATH = path.join(__dirname, './schema.graphql');
 
+const serverOptions = {
+  endpoint: '/v1/graphql'
+};
+
 const resolvers = {
   Query: Object.assign({}, Query, Roles.Query),
   Mutation: Object.assign({}, Mutation, Roles.Mutation)
@@ -37,4 +41,4 @@ const server = new GraphQLServer({
   })
 });
 
-server.start(() => console.log('Server running at http://localhost:4000'));
+server.start(serverOptions, () => console.log('Server running at http://localhost:4000'));
