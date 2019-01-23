@@ -35,7 +35,7 @@ const resolvers = {
 };
 
 const db = new Prisma({
-  typeDefs: path.join(__dirname, './generated/prisma.graphql'),
+  typeDefs: path.join(__dirname, '../generated/prisma.graphql'),
   endpoint: 'https://us1.prisma.sh/cameron-b-4d8f44/kleidi/dev',
   secret: 'mysecret123',
   debug: true
