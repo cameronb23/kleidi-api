@@ -1,8 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 
 const info = () => 'API Version 1';
-const users = (parent, args, context) => context.prisma.users();
-const roles = (parent, args, context) => context.prisma.roles();
+const users = async (parent, args, context) => context.db.query.users();
+const roles = async (parent, args, context) => context.db.query.roles();
 
 export default {
   info,

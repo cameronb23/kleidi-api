@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 const registerUser = (parent, args, context) => new Promise((resolve, reject) => {
   async.waterfall([
     async (callback) => {
-      const existingUser = await context.prisma.user({ email: args.email });
+      const existingUser = await context.db.query.user({ where: { email: args.email } });
 
       if (existingUser) {
         return callback('User with that email already exists.');
@@ -21,8 +21,6 @@ const registerUser = (parent, args, context) => new Promise((resolve, reject) =>
           return callback(`Error hashing password: ${err}`);
         }
 
-        console.log('generated salt: ', salt);
-
         return callback(null, salt);
       });
     },
@@ -32,17 +30,17 @@ const registerUser = (parent, args, context) => new Promise((resolve, reject) =>
           return callback(`Error hashing password: ${err}`);
         }
 
-        console.log('generated hash: ', hash);
-
         return callback(null, salt, hash);
       });
     },
     async (salt, hash, callback) => {
       try {
-        const user = await context.prisma.createUser({
-          ...args,
-          salt,
-          password: hash,
+        const user = await context.db.mutation.createUser({
+          data: {
+            ...args,
+            salt,
+            password: hash,
+          }
         });
 
         return callback(null, user);
@@ -72,7 +70,14 @@ const registerUser = (parent, args, context) => new Promise((resolve, reject) =>
 });
 
 const login = (parent, args, context) => new Promise(async (resolve, reject) => {
-  const user = await context.prisma.user({ email: args.email });
+  let user;
+
+  try {
+    user = await context.db.query.user({ where: { email: args.email } });
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
 
   if (!user) throw new Error('Invalid email or password');
 

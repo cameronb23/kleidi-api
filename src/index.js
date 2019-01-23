@@ -3,12 +3,14 @@ import '@babel/polyfill';
 import dotenv from 'dotenv';
 import path from 'path';
 import { GraphQLServer } from 'graphql-yoga';
+import { makeExecutableSchema } from 'graphql-tools';
+import { importSchema } from 'graphql-import';
 
 // import the prisma client
-import { prisma } from './generated/prisma-client';
+import { Prisma } from 'prisma-binding';
 
 // import our permission middleware
-import Permissions from './permissions';
+// import Permissions from './permissions';
 
 // import resolvers
 import Query from './resolvers/Query';
@@ -16,10 +18,11 @@ import Mutation from './resolvers/Mutation';
 
 import Roles from './resolvers/roles';
 import { getCurrentUser } from './auth';
+import directiveResolvers from './directive-resolvers';
 
 dotenv.config();
 
-const SCHEMA_PATH = path.join(__dirname, './schema.graphql');
+// const SCHEMA_PATH = path.join(__dirname, './schema.graphql');
 
 const serverOptions = {
   endpoint: '/v1/graphql'
@@ -30,14 +33,25 @@ const resolvers = {
   Mutation: Object.assign({}, Mutation, Roles.Mutation)
 };
 
-const server = new GraphQLServer({
-  typeDefs: SCHEMA_PATH,
+const db = new Prisma({
+  typeDefs: path.join(__dirname, './generated/prisma.graphql'),
+  endpoint: 'https://us1.prisma.sh/cameron-b-4d8f44/kleidi/dev',
+  secret: 'mysecret123',
+  debug: true
+});
+
+const schema = makeExecutableSchema({
+  typeDefs: importSchema(path.join(__dirname, './schema.graphql')),
   resolvers,
-  middlewares: [Permissions],
+  directiveResolvers
+});
+
+const server = new GraphQLServer({
+  schema,
   context: async request => ({
     ...request,
-    prisma,
-    user: await getCurrentUser(request)
+    db,
+    user: await getCurrentUser(db, request)
   })
 });
 

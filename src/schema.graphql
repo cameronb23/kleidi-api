@@ -1,10 +1,17 @@
+# import Role from "./generated/prisma.graphql"
+
 scalar DateTime
 scalar Integer
+
+# directives
+directive @private on QUERY | FIELD | FIELD_DEFINITION | MUTATION
+directive @isAuthenticated on QUERY | FIELD | FIELD_DEFINITION | MUTATION
+directive @hasPermissions(permissions: [String]) on QUERY | FIELD | FIELD_DEFINITION | MUTATION
 
 type Query {
   info: String!
   users: [User!]!
-  roles: [Role]!
+  roles: [Role]! @isAuthenticated @hasPermissions(permissions: ["SYSTEM_MANAGE_ROLES"])
 }
 
 type Mutation {
@@ -17,20 +24,12 @@ type Mutation {
   deleteRole(id: ID!): OperationResponse!
 }
 
-type Role {
-  id: ID!
-  createdAt: DateTime!
-  permissions: String
-  name: String!
-  attachedTo: [User]
-}
-
 type User {
   id: ID!
   createdAt: DateTime!
   email: String!
-  salt: String!
-  password: String!
+  salt: String! @private
+  password: String! @private
   name: String!
   roles: [Role]
 }

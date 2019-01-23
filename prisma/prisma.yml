@@ -1,6 +1,0 @@
-endpoint: https://us1.prisma.sh/cameron-b-4d8f44/kleidi-dev/dev
-datamodel: datamodel.prisma
-
-generate:
-  - generator: javascript-client
-    output: ../src/generated/prisma-client/

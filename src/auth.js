@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { prisma } from './generated/prisma-client';
 
-export const getCurrentUser = async (req) => {
+export const getCurrentUser = async (db, req) => {
   const { APP_SECRET } = process.env;
   const auth = req.request.get('Authorization');
   if (auth) {
@@ -9,7 +8,7 @@ export const getCurrentUser = async (req) => {
     const verifiedToken = jwt.verify(token, APP_SECRET);
 
     if (verifiedToken.userId) {
-      const user = await prisma.user({ id: verifiedToken.userId });
+      const user = await db.query.user({ where: { id: verifiedToken.userId } }, '{ id roles { permissions } }');
       return user;
     }
   }

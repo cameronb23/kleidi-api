@@ -1,0 +1,22 @@
+enum Permission {
+  SYSTEM_MANAGE_ROLES
+  SYSTEM_MANAGE_USERS
+}
+
+type User {
+  id: ID! @unique
+  createdAt: DateTime!
+  email: String! @unique
+  salt: String!
+  password: String!
+  name: String!
+  roles: [Role] @relation(name: "UserRoles" onDelete: CASCADE)
+}
+
+type Role {
+  id: ID! @unique
+  createdAt: DateTime!
+  permissions: [Permission]
+  name: String!
+  attachedTo: [User] @relation(name: "RoleUsers")
+}
