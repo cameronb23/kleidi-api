@@ -25,7 +25,8 @@ dotenv.config();
 // const SCHEMA_PATH = path.join(__dirname, './schema.graphql');
 
 const serverOptions = {
-  endpoint: '/v1/graphql'
+  endpoint: '/v1/graphql',
+  port: process.env.PORT || 4000
 };
 
 const resolvers = {
@@ -55,4 +56,4 @@ const server = new GraphQLServer({
   })
 });
 
-server.start(serverOptions, () => console.log('Server running at http://localhost:4000'));
+server.start(serverOptions, () => console.log(`Server running at http://localhost:${process.env.PORT || 4000}`));
