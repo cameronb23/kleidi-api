@@ -3,6 +3,11 @@ enum Permission {
   SYSTEM_MANAGE_USERS
 }
 
+enum BillingType {
+  ONE_TIME,
+  RECURRING
+}
+
 type User {
   id: ID! @unique
   createdAt: DateTime!
@@ -19,4 +24,19 @@ type Role {
   permissions: [Permission]
   name: String!
   attachedTo: [User] @relation(name: "RoleUsers")
+}
+
+type Product {
+  id: ID! @unique
+  createdAt: DateTime!
+  title: String!
+  active: Boolean! @default(value: "false")
+  description: String
+  features: [String]!
+  price: Float!
+  price_currency: String!
+  priceFluctuates: Boolean @default(value: "false")
+  billingType: BillingType
+  forService: String!
+  requiresContact: Boolean! @default(value: "false")
 }

@@ -1,7 +1,8 @@
-# import Role from "./generated/prisma.graphql"
+# import Role, BillingType from "./generated/prisma.graphql"
 
 scalar DateTime
 scalar Integer
+scalar Float
 
 # directives
 directive @private on QUERY | FIELD | FIELD_DEFINITION | MUTATION
@@ -12,6 +13,8 @@ type Query {
   info: String!
   users: [User!]!
   roles: [Role]! @isAuthenticated @hasPermissions(permissions: ["SYSTEM_MANAGE_ROLES"])
+  products: [Product]!
+  productsForService(service: String! active: Boolean): [Product]!
 }
 
 type Mutation {
@@ -32,6 +35,21 @@ type User {
   password: String! @private
   name: String!
   roles: [Role]
+}
+
+type Product {
+  id: ID!
+  createdAt: DateTime! @private
+  title: String!
+  active: Boolean!
+  description: String
+  features: [String!]!
+  price: Float!
+  price_currency: String!
+  priceFluctuates: Boolean
+  billingType: BillingType
+  forService: String!
+  requiresContact: Boolean!
 }
 
 type OperationResponse {

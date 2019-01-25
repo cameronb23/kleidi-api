@@ -1,5 +1,9 @@
 # source: https://us1.prisma.sh/cameron-b-4d8f44/kleidi/dev
-# timestamp: Tue Jan 22 2019 21:22:52 GMT-0500 (Eastern Standard Time)
+# timestamp: Thu Jan 24 2019 21:37:11 GMT-0500 (Eastern Standard Time)
+
+type AggregateProduct {
+  count: Int!
+}
 
 type AggregateRole {
   count: Int!
@@ -14,6 +18,11 @@ type BatchPayload {
   count: Long!
 }
 
+enum BillingType {
+  ONE_TIME
+  RECURRING
+}
+
 scalar DateTime
 
 """
@@ -23,16 +32,22 @@ Long can represent values between -(2^63) and 2^63 - 1.
 scalar Long
 
 type Mutation {
+  createProduct(data: ProductCreateInput!): Product!
   createUser(data: UserCreateInput!): User!
   createRole(data: RoleCreateInput!): Role!
+  updateProduct(data: ProductUpdateInput!, where: ProductWhereUniqueInput!): Product
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
+  deleteProduct(where: ProductWhereUniqueInput!): Product
   deleteUser(where: UserWhereUniqueInput!): User
   deleteRole(where: RoleWhereUniqueInput!): Role
+  upsertProduct(where: ProductWhereUniqueInput!, create: ProductCreateInput!, update: ProductUpdateInput!): Product!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertRole(where: RoleWhereUniqueInput!, create: RoleCreateInput!, update: RoleUpdateInput!): Role!
+  updateManyProducts(data: ProductUpdateManyMutationInput!, where: ProductWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyRoles(data: RoleUpdateManyMutationInput!, where: RoleWhereInput): BatchPayload!
+  deleteManyProducts(where: ProductWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyRoles(where: RoleWhereInput): BatchPayload!
 }
@@ -69,11 +84,457 @@ enum Permission {
   SYSTEM_MANAGE_USERS
 }
 
+type Product implements Node {
+  id: ID!
+  createdAt: DateTime!
+  title: String!
+  active: Boolean!
+  description: String
+  features: [String!]!
+  price: Float!
+  price_currency: String!
+  priceFluctuates: Boolean
+  billingType: BillingType
+  forService: String!
+  requiresContact: Boolean!
+}
+
+"""A connection to a list of items."""
+type ProductConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ProductEdge]!
+  aggregate: AggregateProduct!
+}
+
+input ProductCreatefeaturesInput {
+  set: [String!]
+}
+
+input ProductCreateInput {
+  title: String!
+  active: Boolean
+  description: String
+  price: Float!
+  price_currency: String!
+  priceFluctuates: Boolean
+  billingType: BillingType
+  forService: String!
+  requiresContact: Boolean
+  features: ProductCreatefeaturesInput
+}
+
+"""An edge in a connection."""
+type ProductEdge {
+  """The item at the end of the edge."""
+  node: Product!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ProductOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  title_ASC
+  title_DESC
+  active_ASC
+  active_DESC
+  description_ASC
+  description_DESC
+  price_ASC
+  price_DESC
+  price_currency_ASC
+  price_currency_DESC
+  priceFluctuates_ASC
+  priceFluctuates_DESC
+  billingType_ASC
+  billingType_DESC
+  forService_ASC
+  forService_DESC
+  requiresContact_ASC
+  requiresContact_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type ProductPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  title: String!
+  active: Boolean!
+  description: String
+  features: [String!]!
+  price: Float!
+  price_currency: String!
+  priceFluctuates: Boolean
+  billingType: BillingType
+  forService: String!
+  requiresContact: Boolean!
+}
+
+type ProductSubscriptionPayload {
+  mutation: MutationType!
+  node: Product
+  updatedFields: [String!]
+  previousValues: ProductPreviousValues
+}
+
+input ProductSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProductSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProductSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProductSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ProductWhereInput
+}
+
+input ProductUpdatefeaturesInput {
+  set: [String!]
+}
+
+input ProductUpdateInput {
+  title: String
+  active: Boolean
+  description: String
+  price: Float
+  price_currency: String
+  priceFluctuates: Boolean
+  billingType: BillingType
+  forService: String
+  requiresContact: Boolean
+  features: ProductUpdatefeaturesInput
+}
+
+input ProductUpdateManyMutationInput {
+  title: String
+  active: Boolean
+  description: String
+  price: Float
+  price_currency: String
+  priceFluctuates: Boolean
+  billingType: BillingType
+  forService: String
+  requiresContact: Boolean
+  features: ProductUpdatefeaturesInput
+}
+
+input ProductWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProductWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProductWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProductWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  title: String
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values that are contained in given list."""
+  title_in: [String!]
+
+  """All values that are not contained in given list."""
+  title_not_in: [String!]
+
+  """All values less than the given value."""
+  title_lt: String
+
+  """All values less than or equal the given value."""
+  title_lte: String
+
+  """All values greater than the given value."""
+  title_gt: String
+
+  """All values greater than or equal the given value."""
+  title_gte: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values not ending with the given string."""
+  title_not_ends_with: String
+  active: Boolean
+
+  """All values that are not equal to given value."""
+  active_not: Boolean
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  price: Float
+
+  """All values that are not equal to given value."""
+  price_not: Float
+
+  """All values that are contained in given list."""
+  price_in: [Float!]
+
+  """All values that are not contained in given list."""
+  price_not_in: [Float!]
+
+  """All values less than the given value."""
+  price_lt: Float
+
+  """All values less than or equal the given value."""
+  price_lte: Float
+
+  """All values greater than the given value."""
+  price_gt: Float
+
+  """All values greater than or equal the given value."""
+  price_gte: Float
+  price_currency: String
+
+  """All values that are not equal to given value."""
+  price_currency_not: String
+
+  """All values that are contained in given list."""
+  price_currency_in: [String!]
+
+  """All values that are not contained in given list."""
+  price_currency_not_in: [String!]
+
+  """All values less than the given value."""
+  price_currency_lt: String
+
+  """All values less than or equal the given value."""
+  price_currency_lte: String
+
+  """All values greater than the given value."""
+  price_currency_gt: String
+
+  """All values greater than or equal the given value."""
+  price_currency_gte: String
+
+  """All values containing the given string."""
+  price_currency_contains: String
+
+  """All values not containing the given string."""
+  price_currency_not_contains: String
+
+  """All values starting with the given string."""
+  price_currency_starts_with: String
+
+  """All values not starting with the given string."""
+  price_currency_not_starts_with: String
+
+  """All values ending with the given string."""
+  price_currency_ends_with: String
+
+  """All values not ending with the given string."""
+  price_currency_not_ends_with: String
+  priceFluctuates: Boolean
+
+  """All values that are not equal to given value."""
+  priceFluctuates_not: Boolean
+  billingType: BillingType
+
+  """All values that are not equal to given value."""
+  billingType_not: BillingType
+
+  """All values that are contained in given list."""
+  billingType_in: [BillingType!]
+
+  """All values that are not contained in given list."""
+  billingType_not_in: [BillingType!]
+  forService: String
+
+  """All values that are not equal to given value."""
+  forService_not: String
+
+  """All values that are contained in given list."""
+  forService_in: [String!]
+
+  """All values that are not contained in given list."""
+  forService_not_in: [String!]
+
+  """All values less than the given value."""
+  forService_lt: String
+
+  """All values less than or equal the given value."""
+  forService_lte: String
+
+  """All values greater than the given value."""
+  forService_gt: String
+
+  """All values greater than or equal the given value."""
+  forService_gte: String
+
+  """All values containing the given string."""
+  forService_contains: String
+
+  """All values not containing the given string."""
+  forService_not_contains: String
+
+  """All values starting with the given string."""
+  forService_starts_with: String
+
+  """All values not starting with the given string."""
+  forService_not_starts_with: String
+
+  """All values ending with the given string."""
+  forService_ends_with: String
+
+  """All values not ending with the given string."""
+  forService_not_ends_with: String
+  requiresContact: Boolean
+
+  """All values that are not equal to given value."""
+  requiresContact_not: Boolean
+}
+
+input ProductWhereUniqueInput {
+  id: ID
+}
+
 type Query {
+  products(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Product]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role]!
+  product(where: ProductWhereUniqueInput!): Product
   user(where: UserWhereUniqueInput!): User
   role(where: RoleWhereUniqueInput!): Role
+  productsConnection(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProductConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
 
@@ -471,6 +932,7 @@ input RoleWhereUniqueInput {
 }
 
 type Subscription {
+  product(where: ProductSubscriptionWhereInput): ProductSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
 }
