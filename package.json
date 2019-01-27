@@ -1,6 +1,6 @@
 {
   "name": "kleidi-api",
-  "version": "0.0.03",
+  "version": "0.0.09",
   "description": "kleidi backend",
   "main": "src/index.js",
   "repository": "https://github.com/cameronb23/kleidi-api",
