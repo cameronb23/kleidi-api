@@ -3,6 +3,26 @@ enum Permission {
   SYSTEM_MANAGE_USERS
 }
 
+enum CloudProvider {
+  AWS
+  HEROKU
+}
+
+enum OperationType {
+  CREATING,
+  INITIALIZING,
+  ALLOCATING,
+  DEPLOYING,
+  RUNNING,
+  SHUTTING_DOWN,
+  IDLE
+}
+
+enum UpdateMethod {
+  AUTOMATIC,
+  USER_INITIATED
+}
+
 enum BillingType {
   ONE_TIME,
   RECURRING
@@ -39,4 +59,30 @@ type Product {
   billingType: BillingType
   forService: String!
   requiresContact: Boolean! @default(value: "false")
+}
+
+type KeybotService {
+  id: ID! @unique
+  name: String!
+  createdAt: DateTime!
+  owner: User!
+  cloudProvider: CloudProvider! @default(value: HEROKU)
+  cloudResourceId: String
+  currentOperation: OperationType
+  currentOperationStatus: String
+  currentVersion: String
+  lastDeploy: DateTime
+  updateType: UpdateMethod
+  credentials: KeybotCredentials @relation(name: "KeybotServiceCredentials")
+}
+
+type KeybotCredentials {
+  id: ID! @unique
+  forService: KeybotService @relation(name: "KeybotServiceCredentials")
+  createdAt: DateTime!
+  production: Boolean
+  sessionSecret: String
+  mongoUrl: String
+  discordToken: String
+  encryptionKey: String
 }

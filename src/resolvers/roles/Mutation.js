@@ -17,11 +17,13 @@ const deleteRole = async (parent, args, context) => {
     });
 
     return {
+      resourceId: args.id,
       status: 0
     };
   } catch (err) {
     console.error(err);
     return {
+      resourceId: args.id,
       status: 1,
       error: 'Error deleting role',
       message: 'Failed'

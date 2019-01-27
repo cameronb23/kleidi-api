@@ -1,6 +1,6 @@
 {
   "name": "kleidi-api",
-  "version": "0.0.01",
+  "version": "0.0.03",
   "description": "kleidi backend",
   "main": "src/index.js",
   "repository": "https://github.com/cameronb23/kleidi-api",
@@ -20,8 +20,10 @@
     "@babel/node": "^7.2.2",
     "@babel/polyfill": "^7.2.5",
     "async": "^2.6.1",
+    "aws-sdk": "^2.395.0",
     "bcrypt-nodejs": "^0.0.3",
     "bluebird": "^3.5.3",
+    "crypto-js": "^3.1.9-1",
     "graphql-shield": "^5.1.0",
     "graphql-tools": "^4.0.3",
     "graphql-yoga": "^1.17.0",

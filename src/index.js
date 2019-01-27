@@ -17,28 +17,35 @@ import Query from './resolvers/Query';
 import Mutation from './resolvers/Mutation';
 
 import Roles from './resolvers/roles';
+import KeybotResolvers from './resolvers/keybot';
+import { setupCrypt } from './crypto';
 import { getCurrentUser } from './auth';
 import directiveResolvers from './directive-resolvers';
 
 dotenv.config();
 
+setupCrypt(process.env.APP_SECRET);
+
 // const SCHEMA_PATH = path.join(__dirname, './schema.graphql');
 
 const serverOptions = {
   endpoint: '/v1/graphql',
-  port: process.env.PORT || 4000
+  port: process.env.PORT || 4000,
+  uploads: {
+    maxFileSize: 10000000
+  }
 };
 
 const resolvers = {
-  Query: Object.assign({}, Query, Roles.Query),
-  Mutation: Object.assign({}, Mutation, Roles.Mutation)
+  Query: Object.assign({}, Query, Roles.Query, KeybotResolvers.Query),
+  Mutation: Object.assign({}, Mutation, Roles.Mutation, KeybotResolvers.Mutation)
 };
 
 const db = new Prisma({
   typeDefs: path.join(__dirname, '../gql/generated/prisma.graphql'),
   endpoint: 'https://us1.prisma.sh/cameron-b-4d8f44/kleidi/dev',
   secret: 'mysecret123',
-  debug: true
+  // debug: true
 });
 
 const schema = makeExecutableSchema({

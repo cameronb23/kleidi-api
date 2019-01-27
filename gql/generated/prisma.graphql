@@ -1,5 +1,13 @@
 # source: https://us1.prisma.sh/cameron-b-4d8f44/kleidi/dev
-# timestamp: Thu Jan 24 2019 21:37:11 GMT-0500 (Eastern Standard Time)
+# timestamp: Sun Jan 27 2019 00:43:26 GMT-0500 (Eastern Standard Time)
+
+type AggregateKeybotCredentials {
+  count: Int!
+}
+
+type AggregateKeybotService {
+  count: Int!
+}
 
 type AggregateProduct {
   count: Int!
@@ -23,7 +31,895 @@ enum BillingType {
   RECURRING
 }
 
+enum CloudProvider {
+  AWS
+  HEROKU
+}
+
 scalar DateTime
+
+type KeybotCredentials implements Node {
+  id: ID!
+  forService: KeybotService
+  createdAt: DateTime!
+  production: Boolean
+  sessionSecret: String
+  mongoUrl: String
+  discordToken: String
+  encryptionKey: String
+}
+
+"""A connection to a list of items."""
+type KeybotCredentialsConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [KeybotCredentialsEdge]!
+  aggregate: AggregateKeybotCredentials!
+}
+
+input KeybotCredentialsCreateInput {
+  production: Boolean
+  sessionSecret: String
+  mongoUrl: String
+  discordToken: String
+  encryptionKey: String
+  forService: KeybotServiceCreateOneWithoutCredentialsInput
+}
+
+input KeybotCredentialsCreateOneWithoutForServiceInput {
+  create: KeybotCredentialsCreateWithoutForServiceInput
+  connect: KeybotCredentialsWhereUniqueInput
+}
+
+input KeybotCredentialsCreateWithoutForServiceInput {
+  production: Boolean
+  sessionSecret: String
+  mongoUrl: String
+  discordToken: String
+  encryptionKey: String
+}
+
+"""An edge in a connection."""
+type KeybotCredentialsEdge {
+  """The item at the end of the edge."""
+  node: KeybotCredentials!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum KeybotCredentialsOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  production_ASC
+  production_DESC
+  sessionSecret_ASC
+  sessionSecret_DESC
+  mongoUrl_ASC
+  mongoUrl_DESC
+  discordToken_ASC
+  discordToken_DESC
+  encryptionKey_ASC
+  encryptionKey_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type KeybotCredentialsPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  production: Boolean
+  sessionSecret: String
+  mongoUrl: String
+  discordToken: String
+  encryptionKey: String
+}
+
+type KeybotCredentialsSubscriptionPayload {
+  mutation: MutationType!
+  node: KeybotCredentials
+  updatedFields: [String!]
+  previousValues: KeybotCredentialsPreviousValues
+}
+
+input KeybotCredentialsSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [KeybotCredentialsSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [KeybotCredentialsSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [KeybotCredentialsSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: KeybotCredentialsWhereInput
+}
+
+input KeybotCredentialsUpdateInput {
+  production: Boolean
+  sessionSecret: String
+  mongoUrl: String
+  discordToken: String
+  encryptionKey: String
+  forService: KeybotServiceUpdateOneWithoutCredentialsInput
+}
+
+input KeybotCredentialsUpdateManyMutationInput {
+  production: Boolean
+  sessionSecret: String
+  mongoUrl: String
+  discordToken: String
+  encryptionKey: String
+}
+
+input KeybotCredentialsUpdateOneWithoutForServiceInput {
+  create: KeybotCredentialsCreateWithoutForServiceInput
+  connect: KeybotCredentialsWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: KeybotCredentialsUpdateWithoutForServiceDataInput
+  upsert: KeybotCredentialsUpsertWithoutForServiceInput
+}
+
+input KeybotCredentialsUpdateWithoutForServiceDataInput {
+  production: Boolean
+  sessionSecret: String
+  mongoUrl: String
+  discordToken: String
+  encryptionKey: String
+}
+
+input KeybotCredentialsUpsertWithoutForServiceInput {
+  update: KeybotCredentialsUpdateWithoutForServiceDataInput!
+  create: KeybotCredentialsCreateWithoutForServiceInput!
+}
+
+input KeybotCredentialsWhereInput {
+  """Logical AND on all given filters."""
+  AND: [KeybotCredentialsWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [KeybotCredentialsWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [KeybotCredentialsWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  production: Boolean
+
+  """All values that are not equal to given value."""
+  production_not: Boolean
+  sessionSecret: String
+
+  """All values that are not equal to given value."""
+  sessionSecret_not: String
+
+  """All values that are contained in given list."""
+  sessionSecret_in: [String!]
+
+  """All values that are not contained in given list."""
+  sessionSecret_not_in: [String!]
+
+  """All values less than the given value."""
+  sessionSecret_lt: String
+
+  """All values less than or equal the given value."""
+  sessionSecret_lte: String
+
+  """All values greater than the given value."""
+  sessionSecret_gt: String
+
+  """All values greater than or equal the given value."""
+  sessionSecret_gte: String
+
+  """All values containing the given string."""
+  sessionSecret_contains: String
+
+  """All values not containing the given string."""
+  sessionSecret_not_contains: String
+
+  """All values starting with the given string."""
+  sessionSecret_starts_with: String
+
+  """All values not starting with the given string."""
+  sessionSecret_not_starts_with: String
+
+  """All values ending with the given string."""
+  sessionSecret_ends_with: String
+
+  """All values not ending with the given string."""
+  sessionSecret_not_ends_with: String
+  mongoUrl: String
+
+  """All values that are not equal to given value."""
+  mongoUrl_not: String
+
+  """All values that are contained in given list."""
+  mongoUrl_in: [String!]
+
+  """All values that are not contained in given list."""
+  mongoUrl_not_in: [String!]
+
+  """All values less than the given value."""
+  mongoUrl_lt: String
+
+  """All values less than or equal the given value."""
+  mongoUrl_lte: String
+
+  """All values greater than the given value."""
+  mongoUrl_gt: String
+
+  """All values greater than or equal the given value."""
+  mongoUrl_gte: String
+
+  """All values containing the given string."""
+  mongoUrl_contains: String
+
+  """All values not containing the given string."""
+  mongoUrl_not_contains: String
+
+  """All values starting with the given string."""
+  mongoUrl_starts_with: String
+
+  """All values not starting with the given string."""
+  mongoUrl_not_starts_with: String
+
+  """All values ending with the given string."""
+  mongoUrl_ends_with: String
+
+  """All values not ending with the given string."""
+  mongoUrl_not_ends_with: String
+  discordToken: String
+
+  """All values that are not equal to given value."""
+  discordToken_not: String
+
+  """All values that are contained in given list."""
+  discordToken_in: [String!]
+
+  """All values that are not contained in given list."""
+  discordToken_not_in: [String!]
+
+  """All values less than the given value."""
+  discordToken_lt: String
+
+  """All values less than or equal the given value."""
+  discordToken_lte: String
+
+  """All values greater than the given value."""
+  discordToken_gt: String
+
+  """All values greater than or equal the given value."""
+  discordToken_gte: String
+
+  """All values containing the given string."""
+  discordToken_contains: String
+
+  """All values not containing the given string."""
+  discordToken_not_contains: String
+
+  """All values starting with the given string."""
+  discordToken_starts_with: String
+
+  """All values not starting with the given string."""
+  discordToken_not_starts_with: String
+
+  """All values ending with the given string."""
+  discordToken_ends_with: String
+
+  """All values not ending with the given string."""
+  discordToken_not_ends_with: String
+  encryptionKey: String
+
+  """All values that are not equal to given value."""
+  encryptionKey_not: String
+
+  """All values that are contained in given list."""
+  encryptionKey_in: [String!]
+
+  """All values that are not contained in given list."""
+  encryptionKey_not_in: [String!]
+
+  """All values less than the given value."""
+  encryptionKey_lt: String
+
+  """All values less than or equal the given value."""
+  encryptionKey_lte: String
+
+  """All values greater than the given value."""
+  encryptionKey_gt: String
+
+  """All values greater than or equal the given value."""
+  encryptionKey_gte: String
+
+  """All values containing the given string."""
+  encryptionKey_contains: String
+
+  """All values not containing the given string."""
+  encryptionKey_not_contains: String
+
+  """All values starting with the given string."""
+  encryptionKey_starts_with: String
+
+  """All values not starting with the given string."""
+  encryptionKey_not_starts_with: String
+
+  """All values ending with the given string."""
+  encryptionKey_ends_with: String
+
+  """All values not ending with the given string."""
+  encryptionKey_not_ends_with: String
+  forService: KeybotServiceWhereInput
+}
+
+input KeybotCredentialsWhereUniqueInput {
+  id: ID
+}
+
+type KeybotService implements Node {
+  id: ID!
+  name: String!
+  createdAt: DateTime!
+  owner: User!
+  cloudProvider: CloudProvider!
+  cloudResourceId: String
+  currentOperation: OperationType
+  currentOperationStatus: String
+  currentVersion: String
+  lastDeploy: DateTime
+  updateType: UpdateMethod
+  credentials: KeybotCredentials
+}
+
+"""A connection to a list of items."""
+type KeybotServiceConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [KeybotServiceEdge]!
+  aggregate: AggregateKeybotService!
+}
+
+input KeybotServiceCreateInput {
+  name: String!
+  cloudProvider: CloudProvider
+  cloudResourceId: String
+  currentOperation: OperationType
+  currentOperationStatus: String
+  currentVersion: String
+  lastDeploy: DateTime
+  updateType: UpdateMethod
+  owner: UserCreateOneInput!
+  credentials: KeybotCredentialsCreateOneWithoutForServiceInput
+}
+
+input KeybotServiceCreateOneWithoutCredentialsInput {
+  create: KeybotServiceCreateWithoutCredentialsInput
+  connect: KeybotServiceWhereUniqueInput
+}
+
+input KeybotServiceCreateWithoutCredentialsInput {
+  name: String!
+  cloudProvider: CloudProvider
+  cloudResourceId: String
+  currentOperation: OperationType
+  currentOperationStatus: String
+  currentVersion: String
+  lastDeploy: DateTime
+  updateType: UpdateMethod
+  owner: UserCreateOneInput!
+}
+
+"""An edge in a connection."""
+type KeybotServiceEdge {
+  """The item at the end of the edge."""
+  node: KeybotService!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum KeybotServiceOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  createdAt_ASC
+  createdAt_DESC
+  cloudProvider_ASC
+  cloudProvider_DESC
+  cloudResourceId_ASC
+  cloudResourceId_DESC
+  currentOperation_ASC
+  currentOperation_DESC
+  currentOperationStatus_ASC
+  currentOperationStatus_DESC
+  currentVersion_ASC
+  currentVersion_DESC
+  lastDeploy_ASC
+  lastDeploy_DESC
+  updateType_ASC
+  updateType_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type KeybotServicePreviousValues {
+  id: ID!
+  name: String!
+  createdAt: DateTime!
+  cloudProvider: CloudProvider!
+  cloudResourceId: String
+  currentOperation: OperationType
+  currentOperationStatus: String
+  currentVersion: String
+  lastDeploy: DateTime
+  updateType: UpdateMethod
+}
+
+type KeybotServiceSubscriptionPayload {
+  mutation: MutationType!
+  node: KeybotService
+  updatedFields: [String!]
+  previousValues: KeybotServicePreviousValues
+}
+
+input KeybotServiceSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [KeybotServiceSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [KeybotServiceSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [KeybotServiceSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: KeybotServiceWhereInput
+}
+
+input KeybotServiceUpdateInput {
+  name: String
+  cloudProvider: CloudProvider
+  cloudResourceId: String
+  currentOperation: OperationType
+  currentOperationStatus: String
+  currentVersion: String
+  lastDeploy: DateTime
+  updateType: UpdateMethod
+  owner: UserUpdateOneRequiredInput
+  credentials: KeybotCredentialsUpdateOneWithoutForServiceInput
+}
+
+input KeybotServiceUpdateManyMutationInput {
+  name: String
+  cloudProvider: CloudProvider
+  cloudResourceId: String
+  currentOperation: OperationType
+  currentOperationStatus: String
+  currentVersion: String
+  lastDeploy: DateTime
+  updateType: UpdateMethod
+}
+
+input KeybotServiceUpdateOneWithoutCredentialsInput {
+  create: KeybotServiceCreateWithoutCredentialsInput
+  connect: KeybotServiceWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: KeybotServiceUpdateWithoutCredentialsDataInput
+  upsert: KeybotServiceUpsertWithoutCredentialsInput
+}
+
+input KeybotServiceUpdateWithoutCredentialsDataInput {
+  name: String
+  cloudProvider: CloudProvider
+  cloudResourceId: String
+  currentOperation: OperationType
+  currentOperationStatus: String
+  currentVersion: String
+  lastDeploy: DateTime
+  updateType: UpdateMethod
+  owner: UserUpdateOneRequiredInput
+}
+
+input KeybotServiceUpsertWithoutCredentialsInput {
+  update: KeybotServiceUpdateWithoutCredentialsDataInput!
+  create: KeybotServiceCreateWithoutCredentialsInput!
+}
+
+input KeybotServiceWhereInput {
+  """Logical AND on all given filters."""
+  AND: [KeybotServiceWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [KeybotServiceWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [KeybotServiceWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  cloudProvider: CloudProvider
+
+  """All values that are not equal to given value."""
+  cloudProvider_not: CloudProvider
+
+  """All values that are contained in given list."""
+  cloudProvider_in: [CloudProvider!]
+
+  """All values that are not contained in given list."""
+  cloudProvider_not_in: [CloudProvider!]
+  cloudResourceId: String
+
+  """All values that are not equal to given value."""
+  cloudResourceId_not: String
+
+  """All values that are contained in given list."""
+  cloudResourceId_in: [String!]
+
+  """All values that are not contained in given list."""
+  cloudResourceId_not_in: [String!]
+
+  """All values less than the given value."""
+  cloudResourceId_lt: String
+
+  """All values less than or equal the given value."""
+  cloudResourceId_lte: String
+
+  """All values greater than the given value."""
+  cloudResourceId_gt: String
+
+  """All values greater than or equal the given value."""
+  cloudResourceId_gte: String
+
+  """All values containing the given string."""
+  cloudResourceId_contains: String
+
+  """All values not containing the given string."""
+  cloudResourceId_not_contains: String
+
+  """All values starting with the given string."""
+  cloudResourceId_starts_with: String
+
+  """All values not starting with the given string."""
+  cloudResourceId_not_starts_with: String
+
+  """All values ending with the given string."""
+  cloudResourceId_ends_with: String
+
+  """All values not ending with the given string."""
+  cloudResourceId_not_ends_with: String
+  currentOperation: OperationType
+
+  """All values that are not equal to given value."""
+  currentOperation_not: OperationType
+
+  """All values that are contained in given list."""
+  currentOperation_in: [OperationType!]
+
+  """All values that are not contained in given list."""
+  currentOperation_not_in: [OperationType!]
+  currentOperationStatus: String
+
+  """All values that are not equal to given value."""
+  currentOperationStatus_not: String
+
+  """All values that are contained in given list."""
+  currentOperationStatus_in: [String!]
+
+  """All values that are not contained in given list."""
+  currentOperationStatus_not_in: [String!]
+
+  """All values less than the given value."""
+  currentOperationStatus_lt: String
+
+  """All values less than or equal the given value."""
+  currentOperationStatus_lte: String
+
+  """All values greater than the given value."""
+  currentOperationStatus_gt: String
+
+  """All values greater than or equal the given value."""
+  currentOperationStatus_gte: String
+
+  """All values containing the given string."""
+  currentOperationStatus_contains: String
+
+  """All values not containing the given string."""
+  currentOperationStatus_not_contains: String
+
+  """All values starting with the given string."""
+  currentOperationStatus_starts_with: String
+
+  """All values not starting with the given string."""
+  currentOperationStatus_not_starts_with: String
+
+  """All values ending with the given string."""
+  currentOperationStatus_ends_with: String
+
+  """All values not ending with the given string."""
+  currentOperationStatus_not_ends_with: String
+  currentVersion: String
+
+  """All values that are not equal to given value."""
+  currentVersion_not: String
+
+  """All values that are contained in given list."""
+  currentVersion_in: [String!]
+
+  """All values that are not contained in given list."""
+  currentVersion_not_in: [String!]
+
+  """All values less than the given value."""
+  currentVersion_lt: String
+
+  """All values less than or equal the given value."""
+  currentVersion_lte: String
+
+  """All values greater than the given value."""
+  currentVersion_gt: String
+
+  """All values greater than or equal the given value."""
+  currentVersion_gte: String
+
+  """All values containing the given string."""
+  currentVersion_contains: String
+
+  """All values not containing the given string."""
+  currentVersion_not_contains: String
+
+  """All values starting with the given string."""
+  currentVersion_starts_with: String
+
+  """All values not starting with the given string."""
+  currentVersion_not_starts_with: String
+
+  """All values ending with the given string."""
+  currentVersion_ends_with: String
+
+  """All values not ending with the given string."""
+  currentVersion_not_ends_with: String
+  lastDeploy: DateTime
+
+  """All values that are not equal to given value."""
+  lastDeploy_not: DateTime
+
+  """All values that are contained in given list."""
+  lastDeploy_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  lastDeploy_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  lastDeploy_lt: DateTime
+
+  """All values less than or equal the given value."""
+  lastDeploy_lte: DateTime
+
+  """All values greater than the given value."""
+  lastDeploy_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  lastDeploy_gte: DateTime
+  updateType: UpdateMethod
+
+  """All values that are not equal to given value."""
+  updateType_not: UpdateMethod
+
+  """All values that are contained in given list."""
+  updateType_in: [UpdateMethod!]
+
+  """All values that are not contained in given list."""
+  updateType_not_in: [UpdateMethod!]
+  owner: UserWhereInput
+  credentials: KeybotCredentialsWhereInput
+}
+
+input KeybotServiceWhereUniqueInput {
+  id: ID
+}
 
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
@@ -33,23 +929,35 @@ scalar Long
 
 type Mutation {
   createProduct(data: ProductCreateInput!): Product!
-  createUser(data: UserCreateInput!): User!
+  createKeybotService(data: KeybotServiceCreateInput!): KeybotService!
+  createKeybotCredentials(data: KeybotCredentialsCreateInput!): KeybotCredentials!
   createRole(data: RoleCreateInput!): Role!
+  createUser(data: UserCreateInput!): User!
   updateProduct(data: ProductUpdateInput!, where: ProductWhereUniqueInput!): Product
-  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateKeybotService(data: KeybotServiceUpdateInput!, where: KeybotServiceWhereUniqueInput!): KeybotService
+  updateKeybotCredentials(data: KeybotCredentialsUpdateInput!, where: KeybotCredentialsWhereUniqueInput!): KeybotCredentials
   updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   deleteProduct(where: ProductWhereUniqueInput!): Product
-  deleteUser(where: UserWhereUniqueInput!): User
+  deleteKeybotService(where: KeybotServiceWhereUniqueInput!): KeybotService
+  deleteKeybotCredentials(where: KeybotCredentialsWhereUniqueInput!): KeybotCredentials
   deleteRole(where: RoleWhereUniqueInput!): Role
+  deleteUser(where: UserWhereUniqueInput!): User
   upsertProduct(where: ProductWhereUniqueInput!, create: ProductCreateInput!, update: ProductUpdateInput!): Product!
-  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  upsertKeybotService(where: KeybotServiceWhereUniqueInput!, create: KeybotServiceCreateInput!, update: KeybotServiceUpdateInput!): KeybotService!
+  upsertKeybotCredentials(where: KeybotCredentialsWhereUniqueInput!, create: KeybotCredentialsCreateInput!, update: KeybotCredentialsUpdateInput!): KeybotCredentials!
   upsertRole(where: RoleWhereUniqueInput!, create: RoleCreateInput!, update: RoleUpdateInput!): Role!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   updateManyProducts(data: ProductUpdateManyMutationInput!, where: ProductWhereInput): BatchPayload!
-  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  updateManyKeybotServices(data: KeybotServiceUpdateManyMutationInput!, where: KeybotServiceWhereInput): BatchPayload!
+  updateManyKeybotCredentialses(data: KeybotCredentialsUpdateManyMutationInput!, where: KeybotCredentialsWhereInput): BatchPayload!
   updateManyRoles(data: RoleUpdateManyMutationInput!, where: RoleWhereInput): BatchPayload!
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   deleteManyProducts(where: ProductWhereInput): BatchPayload!
-  deleteManyUsers(where: UserWhereInput): BatchPayload!
+  deleteManyKeybotServices(where: KeybotServiceWhereInput): BatchPayload!
+  deleteManyKeybotCredentialses(where: KeybotCredentialsWhereInput): BatchPayload!
   deleteManyRoles(where: RoleWhereInput): BatchPayload!
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -62,6 +970,16 @@ enum MutationType {
 interface Node {
   """The id of the object."""
   id: ID!
+}
+
+enum OperationType {
+  CREATING
+  INITIALIZING
+  ALLOCATING
+  DEPLOYING
+  RUNNING
+  SHUTTING_DOWN
+  IDLE
 }
 
 """Information about pagination in a connection."""
@@ -529,14 +1447,20 @@ input ProductWhereUniqueInput {
 
 type Query {
   products(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Product]!
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  keybotServices(where: KeybotServiceWhereInput, orderBy: KeybotServiceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [KeybotService]!
+  keybotCredentialses(where: KeybotCredentialsWhereInput, orderBy: KeybotCredentialsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [KeybotCredentials]!
   roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role]!
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   product(where: ProductWhereUniqueInput!): Product
-  user(where: UserWhereUniqueInput!): User
+  keybotService(where: KeybotServiceWhereUniqueInput!): KeybotService
+  keybotCredentials(where: KeybotCredentialsWhereUniqueInput!): KeybotCredentials
   role(where: RoleWhereUniqueInput!): Role
+  user(where: UserWhereUniqueInput!): User
   productsConnection(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProductConnection!
-  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  keybotServicesConnection(where: KeybotServiceWhereInput, orderBy: KeybotServiceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): KeybotServiceConnection!
+  keybotCredentialsesConnection(where: KeybotCredentialsWhereInput, orderBy: KeybotCredentialsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): KeybotCredentialsConnection!
   rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -933,8 +1857,15 @@ input RoleWhereUniqueInput {
 
 type Subscription {
   product(where: ProductSubscriptionWhereInput): ProductSubscriptionPayload
-  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  keybotService(where: KeybotServiceSubscriptionWhereInput): KeybotServiceSubscriptionPayload
+  keybotCredentials(where: KeybotCredentialsSubscriptionWhereInput): KeybotCredentialsSubscriptionPayload
   role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+}
+
+enum UpdateMethod {
+  AUTOMATIC
+  USER_INITIATED
 }
 
 type User implements Node {
@@ -968,6 +1899,11 @@ input UserCreateInput {
 input UserCreateManyInput {
   create: [UserCreateInput!]
   connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateOneInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
 }
 
 """An edge in a connection."""
@@ -1324,9 +2260,21 @@ input UserUpdateManyWithWhereNestedInput {
   data: UserUpdateManyDataInput!
 }
 
+input UserUpdateOneRequiredInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
+  update: UserUpdateDataInput
+  upsert: UserUpsertNestedInput
+}
+
 input UserUpdateWithWhereUniqueNestedInput {
   where: UserWhereUniqueInput!
   data: UserUpdateDataInput!
+}
+
+input UserUpsertNestedInput {
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
 }
 
 input UserUpsertWithWhereUniqueNestedInput {

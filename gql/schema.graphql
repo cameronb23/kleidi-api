@@ -1,8 +1,10 @@
-# import Role, BillingType from "./generated/prisma.graphql"
+# import Role, BillingType, CloudProvider, UpdateMethod, OperationType from "./generated/prisma.graphql"
 
 scalar DateTime
+scalar Json
 scalar Integer
 scalar Float
+scalar Upload
 
 # directives
 directive @private on QUERY | FIELD | FIELD_DEFINITION | MUTATION
@@ -15,6 +17,9 @@ type Query {
   roles: [Role]! @isAuthenticated @hasPermissions(permissions: ["SYSTEM_MANAGE_ROLES"])
   products: [Product]!
   productsForService(service: String! active: Boolean): [Product]!
+
+  # keybot service queries
+  ownedKeybotServices: [KeybotService]! @isAuthenticated
 }
 
 type Mutation {
@@ -25,6 +30,14 @@ type Mutation {
   createRole(name: String!, permissions: String): Role!
   updateRole(id: ID!, name: String, permissions: String): Role!
   deleteRole(id: ID!): OperationResponse!
+
+  # Keybot service mutations
+  createKeybotService(name: String!, updateType: UpdateMethod!): KeybotService! @isAuthenticated
+  uploadCustomFile(file: Upload!, filePath: String!, serviceId: String!): OperationResponse! @isAuthenticated
+  deployService(id: String!): KeybotService! @isAuthenticated
+
+  # updateKeybotCredentials(serviceId: String!, production: Boolean!, sessionSecret: String!, mongoUrl: String!, discordToken: String!, encryptionKey: String!): KeybotCredentials! @isAuthenticated
+  updateKeybotCredentials(serviceId: String!, data: Json!): KeybotCredentials! @isAuthenticated
 }
 
 type User {
@@ -52,7 +65,34 @@ type Product {
   requiresContact: Boolean!
 }
 
+type KeybotService {
+  id: ID!
+  name: String!
+  createdAt: DateTime! @private
+  owner: User!
+  cloudProvider: CloudProvider! @private
+  cloudResourceId: String @private
+  currentOperation: OperationType
+  currentOperationStatus: String
+  currentVersion: String
+  lastDeploy: DateTime
+  updateType: UpdateMethod
+  credentials: KeybotCredentials
+}
+
+type KeybotCredentials {
+  id: ID!
+  forService: KeybotService!
+  createdAt: DateTime!
+  production: Boolean
+  sessionSecret: String!
+  mongoUrl: String!
+  discordToken: String!
+  encryptionKey: String!
+}
+
 type OperationResponse {
+  resourceId: ID
   status: Integer!
   error: String
   message: String
