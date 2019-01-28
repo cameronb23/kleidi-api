@@ -1,19 +1,19 @@
 import {
-  createNewCluster, createTaskDefinition, deployService as deployServiceAws, deleteOtherServices, uploadFile
+  createTaskDefinition,
+  retrieveServiceStatus,
+  deployService as deployServiceAws,
+  uploadFile
 } from './providers/aws';
 
 export const createKeybotService = async (serviceId, serviceName, serviceOwnerId, provider, db) => {
   switch (provider) {
     case 'AWS': {
       try {
-        const clusterArn = await createNewCluster(serviceId, serviceName, serviceOwnerId);
-
         await db.mutation.updateKeybotService({
           where: {
             id: serviceId
           },
           data: {
-            cloudResourceId: clusterArn,
             currentOperation: 'IDLE',
             currentOperationStatus: 'Successfully created cloud service. Ready to deploy'
           }
@@ -25,6 +25,7 @@ export const createKeybotService = async (serviceId, serviceName, serviceOwnerId
             id: serviceId
           },
           data: {
+            currentOperation: 'IDLE',
             currentOperationStatus: 'Failed to create cloud service. Please re-create this service.'
           }
         }, '{ id }');
@@ -42,16 +43,44 @@ export const createKeybotService = async (serviceId, serviceName, serviceOwnerId
   }
 };
 
-export const deployService = async (service, credentials, db) => {
-  console.log(service);
+export const pingServiceStatus = async (service, db) => {
   switch (service.cloudProvider) {
     case 'AWS': {
       try {
-        // bring down any other running service
-        await deleteOtherServices(service);
+        const res = await retrieveServiceStatus(service, 'arn:aws:ecs:us-east-1:758556097563:cluster/Keybot-Deployment-Cluster');
+        const { currentOperation, currentOperationStatus, lastDeploy } = res;
+        await db.mutation.updateKeybotService({
+          where: {
+            id: service.id
+          },
+          data: {
+            currentOperation,
+            currentOperationStatus,
+            lastDeploy
+          }
+        }, '{ id }');
+      } catch (e) {
+        console.error(e);
+      }
+      break;
+    }
+    case 'HEROKU': {
+      console.error('null');
+      break;
+    }
+    default: {
+      console.error('No cloud provider');
+    }
+  }
+}
+
+export const deployService = async (service, credentials, db) => {
+  switch (service.cloudProvider) {
+    case 'AWS': {
+      try {
         const defArn = await createTaskDefinition(service, credentials);
         console.log('Task definition ARN: ', defArn);
-        const serviceArn = await deployServiceAws(service);
+        const serviceArn = await deployServiceAws(service, 'arn:aws:ecs:us-east-1:758556097563:cluster/Keybot-Deployment-Cluster'); // cluster ARN
         console.log('Service ARN: ', serviceArn);
 
         await db.mutation.updateKeybotService({
@@ -59,8 +88,9 @@ export const deployService = async (service, credentials, db) => {
             id: service.id
           },
           data: {
-            currentOperation: 'RUNNING',
-            currentOperationStatus: 'Successfully deployed to the cloud'
+            cloudResourceId: serviceArn,
+            currentOperation: 'DEPLOYING',
+            currentOperationStatus: 'Deploying new patch to instances'
           }
         }, '{ id }');
       } catch (e) {
@@ -88,11 +118,11 @@ export const deployService = async (service, credentials, db) => {
   }
 };
 
-export const uploadCustomResource = async (serviceId, provider, filePath, fileStream) => {
+export const uploadCustomResource = async (serviceId, provider, opts, fileStream) => {
   switch (provider) {
     case 'AWS': {
       try {
-        const resLocation = await uploadFile(serviceId, filePath, fileStream);
+        const resLocation = await uploadFile(serviceId, opts, fileStream);
         return resLocation;
       } catch (e) {
         console.error('Error uploading file', e);

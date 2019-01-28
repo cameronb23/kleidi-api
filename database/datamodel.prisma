@@ -35,7 +35,15 @@ type User {
   salt: String!
   password: String!
   name: String!
-  roles: [Role] @relation(name: "UserRoles" onDelete: CASCADE)
+  roles: [Role] @relation(name: "UserRoles")
+  billingPlans: [BillingPlan] @relation(name: "UserBillingPlans")
+}
+
+type BillingPlan {
+  id: ID! @unique
+  createdAt: DateTime!
+  associatedProducts: [Product]!
+  forUser: User! @relation(name: "BillingPlanUser")
 }
 
 type Role {
@@ -57,7 +65,8 @@ type Product {
   price_currency: String!
   priceFluctuates: Boolean @default(value: "false")
   billingType: BillingType
-  forService: String!
+  forServices: [String]!
+  serviceRestrictions: Json
   requiresContact: Boolean! @default(value: "false")
 }
 
@@ -66,7 +75,7 @@ type KeybotService {
   name: String!
   createdAt: DateTime!
   owner: User!
-  cloudProvider: CloudProvider! @default(value: HEROKU)
+  cloudProvider: CloudProvider! @default(value: AWS)
   cloudResourceId: String
   currentOperation: OperationType
   currentOperationStatus: String

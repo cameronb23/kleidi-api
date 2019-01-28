@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk';
 import async from 'async';
-import { generateTaskDefinition } from './util';
+import _ from 'underscore';
+import { generateTaskDefinition, generateServiceOptions } from './util';
 
 AWS.config.update({
   region: 'us-east-1'
@@ -72,9 +73,74 @@ export const createTaskDefinition = async (service, serviceCredentials) => {
   }
 };
 
-export const listServices = async (service) => {
+export const retrieveServiceStatus = async (service, clusterArn) => {
   const params = {
-    cluster: service.cloudResourceId
+    cluster: clusterArn,
+    services: [`${service.name}-${service.id}`]
+  };
+
+  try {
+    const res = await ECS.describeServices(params).promise();
+
+    if (res.failures.length > 0) {
+      const failureMessage = `${res.failures[0].arn}---${res.failures[0].reason}`;
+      throw new Error(`Error describing services: ${failureMessage}`);
+    }
+
+    if (res.services.length === 0) {
+      throw new Error('Error fetching service: No service found');
+    }
+
+    const serviceResponse = res.services[0];
+
+    const {
+      status, pendingCount, runningCount, deployments
+    } = serviceResponse;
+
+    const result = {
+      currentOperation: 'DEPLOYING',
+      currentOperationStatus: 'Deploying new patch to instances',
+      lastDeploy: null
+    };
+
+    if (status === 'DRAINING') {
+      result.currentOperation = 'SHUTTING_DOWN';
+      result.currentOperationStatus = 'Service is shutting down.';
+    } else if (status === 'INACTIVE') {
+      result.currentOperation = 'IDLE';
+      result.currentOperationStatus = 'No service deployed.';
+    }
+
+    // status is ACTIVE
+    if (deployments.length > 0) {
+      const deploymentStatuses = _.pluck(deployments, 'status');
+
+      if (deploymentStatuses.includes('PRIMARY')) {
+        const currentDeploy = _.findWhere(deployments, { status: 'PRIMARY' });
+
+        result.currentOperation = 'RUNNING';
+        result.currentOperationStatus = 'Service is running and stable';
+        if (currentDeploy) result.lastDeploy = currentDeploy.createdAt;
+      } else if (deploymentStatuses.includes('ACTIVE')) {
+        result.currentOperation = 'DEPLOYING';
+        result.currentOperationStatus = 'Service re-deploying';
+      }
+    }
+
+    if (runningCount === 0 || pendingCount > 0) {
+      result.currentOperation = 'ALLOCATING';
+      result.currentOperationStatus = 'Allocating servers for deployment.';
+    }
+
+    return result;
+  } catch (e) {
+    throw new Error(`Error retrieving updates: ${e}`);
+  }
+};
+
+export const listServices = async (service, clusterArn) => {
+  const params = {
+    cluster: clusterArn
   };
 
   try {
@@ -112,10 +178,10 @@ export const deleteOtherServices = async (service) => {
   }
 };
 
-export const updateService = async (service) => {
+export const updateService = async (service, clusterArn) => {
   const params = {
-    service: 'keybot-service',
-    cluster: service.cloudResourceId,
+    service: `${service.name}-${service.id}`,
+    cluster: clusterArn,
     taskDefinition: `${service.name}-${service.id}`,
     forceNewDeployment: true
   };
@@ -123,37 +189,32 @@ export const updateService = async (service) => {
   try {
     const res = await ECS.updateService(params).promise();
 
-    return res.service.serviceArn;
+    return res;
   } catch (e) {
     throw new Error(`Error updating service: ${e}`);
   }
 };
 
-export const deployService = async (service) => {
-  const params = {
-    cluster: service.cloudResourceId,
-    desiredCount: 1,
-    serviceName: 'keybot-service',
-    taskDefinition: `${service.name}-${service.id}`,
-    launchType: 'FARGATE',
-    networkConfiguration: {
-      awsvpcConfiguration: {
-        assignPublicIp: 'ENABLED',
-        subnets: ['subnet-0289ea1e7ab7ee6e8']
-      }
-    }
-  };
+export const deployService = async (service, clusterArn) => {
+  const params = generateServiceOptions(service, clusterArn);
 
-  const currentServices = await listServices(service);
+  // const currentServices = await listServices(service);
 
   try {
-    if (currentServices.length > 0) {
-      const res = await updateService(service);
+    // if (currentServices.length > 0) {
+    //   const res = await updateService(service);
 
-      return res;
+    //   return res;
+    // }
+
+    let res;
+
+    if (service.cloudResourceId) {
+      // update service
+      res = await updateService(service, clusterArn);
+    } else {
+      res = await ECS.createService(params).promise();
     }
-
-    const res = await ECS.createService(params).promise();
 
     return res.service.serviceArn;
   } catch (e) {
@@ -179,11 +240,18 @@ export const getCustomResources = async (serviceId) => {
   }
 };
 
-export const uploadFile = async (serviceId, filePath, fileStream) => {
+export const uploadFile = async (serviceId, opts, fileStream) => {
+  const { filePath, fileType } = opts;
+  let tags = `KLEIDI_TYPE=${fileType}`;
+
+  if (opts.viewPath) {
+    tags += `&KLEIDI_VIEW_PATH=${opts.viewPath}`;
+  }
   const params = {
     Bucket: `kleidi-services/${serviceId}/customResources`,
     Key: filePath,
-    Body: fileStream
+    Body: fileStream,
+    Tagging: tags
   };
 
   try {

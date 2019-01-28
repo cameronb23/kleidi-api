@@ -1,4 +1,9 @@
-import { createKeybotService, deployService, uploadCustomResource } from '../cloud/keybot';
+import {
+  createKeybotService,
+  pingServiceStatus,
+  deployService,
+  uploadCustomResource
+} from '../cloud/keybot';
 import { encryptData, decryptData } from '../crypto';
 
 const fieldNames = ['sessionSecret', 'mongoUrl', 'discordToken', 'encryptionKey'];
@@ -32,7 +37,26 @@ const Query = {
         id: context.user.id
       }
     }
-  }, info)
+  }, info),
+  // eslint-disable-next-line max-len
+  ownedKeybotService: async (parent, args, context, info) => {
+    const query = {
+      where: {
+        id: args.serviceId,
+        owner: {
+          id: context.user.id
+        }
+      }
+    };
+    const serviceRes = await context.db.query.keybotServices(query, '{ id name cloudProvider }');
+
+    if (serviceRes.length > 0) {
+      const service = serviceRes[0];
+      pingServiceStatus(service, context.db);
+    }
+
+    return context.db.query.keybotServices(query, info);
+  }
 };
 
 const Mutation = {
@@ -165,7 +189,12 @@ const Mutation = {
     }
   },
   uploadCustomFile: async (parent, args, context) => {
-    const { serviceId, filePath, file } = args;
+    const {
+      serviceId,
+      filePath,
+      file,
+      fileType
+    } = args;
 
     const serviceQuery = await context.db.query.keybotService({
       where: {
@@ -188,7 +217,16 @@ const Mutation = {
     const stream = createReadStream();
 
     try {
-      const res = await uploadCustomResource(id, cloudProvider, filePath, stream);
+      const opts = {
+        filePath,
+        fileType
+      };
+
+      if (args.viewPath) {
+        opts.viewPath = args.viewPath;
+      }
+
+      const res = await uploadCustomResource(id, cloudProvider, opts, stream);
 
       return {
         resourceId: res,

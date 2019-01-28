@@ -20,6 +20,7 @@ type Query {
 
   # keybot service queries
   ownedKeybotServices: [KeybotService]! @isAuthenticated
+  ownedKeybotService(serviceId: String!): [KeybotService]! @isAuthenticated
 }
 
 type Mutation {
@@ -33,7 +34,7 @@ type Mutation {
 
   # Keybot service mutations
   createKeybotService(name: String!, updateType: UpdateMethod!): KeybotService! @isAuthenticated
-  uploadCustomFile(file: Upload!, filePath: String!, serviceId: String!): OperationResponse! @isAuthenticated
+  uploadCustomFile(file: Upload!, filePath: String!, fileType: String!, viewPath: String, serviceId: String!): OperationResponse! @isAuthenticated
   deployService(id: String!): KeybotService! @isAuthenticated
 
   # updateKeybotCredentials(serviceId: String!, production: Boolean!, sessionSecret: String!, mongoUrl: String!, discordToken: String!, encryptionKey: String!): KeybotCredentials! @isAuthenticated
@@ -61,7 +62,8 @@ type Product {
   price_currency: String!
   priceFluctuates: Boolean
   billingType: BillingType
-  forService: String!
+  forServices: [String]!
+  serviceRestrictions: Json
   requiresContact: Boolean!
 }
 
@@ -70,7 +72,7 @@ type KeybotService {
   name: String!
   createdAt: DateTime! @private
   owner: User!
-  cloudProvider: CloudProvider! @private
+  cloudProvider: CloudProvider!
   cloudResourceId: String @private
   currentOperation: OperationType
   currentOperationStatus: String

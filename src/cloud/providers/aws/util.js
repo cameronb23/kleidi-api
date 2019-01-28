@@ -8,7 +8,7 @@ export const generateTaskDefinition = (service, credentials) => ({
   requiresCompatibilities: ['FARGATE'],
   containerDefinitions: [
     {
-      name: 'keybot-basic-container',
+      name: 'keybot-container',
       image: '758556097563.dkr.ecr.us-east-1.amazonaws.com/kleidi/deployment:latest',
       logConfiguration: {
         logDriver: 'awslogs',
@@ -18,6 +18,11 @@ export const generateTaskDefinition = (service, credentials) => ({
           'awslogs-stream-prefix': 'ecs'
         }
       },
+      portMappings: [
+        {
+          containerPort: 80
+        }
+      ],
       environment: [
         {
           name: 'KEYBOT_SERVICE_ID',
@@ -46,4 +51,19 @@ export const generateTaskDefinition = (service, credentials) => ({
       ]
     }
   ]
+});
+
+export const generateServiceOptions = (service, clusterArn) => ({
+  cluster: clusterArn,
+  desiredCount: 1,
+  serviceName: `${service.name}-${service.id}`,
+  taskDefinition: `${service.name}-${service.id}`,
+  launchType: 'FARGATE',
+  networkConfiguration: {
+    awsvpcConfiguration: {
+      assignPublicIp: 'ENABLED',
+      securityGroups: ['sg-0feb401e0ae57c984'],
+      subnets: ['subnet-0289ea1e7ab7ee6e8']
+    }
+  }
 });
