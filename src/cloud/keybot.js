@@ -72,7 +72,7 @@ export const pingServiceStatus = async (service, db) => {
       console.error('No cloud provider');
     }
   }
-}
+};
 
 export const deployService = async (service, credentials, db) => {
   switch (service.cloudProvider) {

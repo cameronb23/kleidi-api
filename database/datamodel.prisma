@@ -43,7 +43,7 @@ type BillingPlan {
   id: ID! @unique
   createdAt: DateTime!
   associatedProducts: [Product]!
-  forUser: User! @relation(name: "BillingPlanUser")
+  forUser: User! @relation(name: "UserBillingPlans")
 }
 
 type Role {
@@ -51,7 +51,7 @@ type Role {
   createdAt: DateTime!
   permissions: [Permission]
   name: String!
-  attachedTo: [User] @relation(name: "RoleUsers")
+  attachedTo: [User] @relation(name: "UserRoles")
 }
 
 type Product {

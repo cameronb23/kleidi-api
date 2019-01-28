@@ -62,7 +62,43 @@ const Query = {
 const Mutation = {
   createKeybotService: async (parent, args, context) => {
     // create object and start initialization
+    // verify user has allowance to do so
     try {
+      const userQuery = await context.db.query.user({ where: { id: context.user.id } }, '{ billingPlans { associatedProducts { forServices serviceRestrictions } } }');
+
+      if (userQuery == null) {
+        throw new Error('user not found');
+      }
+
+      const { billingPlans } = userQuery;
+
+      if (billingPlans.length === 0) {
+        throw new Error('Not enough allowance on current billing plan.');
+      }
+
+      const serviceQuery = await context.db.query.keybotServices({
+        where: {
+          owner: { id: context.user.id }
+        }
+      }, '{ id }');
+
+      const currentServices = serviceQuery.length;
+      // check their allowances via their billing plans
+      let serviceAllowance = 0;
+      billingPlans.forEach((plan) => {
+        plan.associatedProducts.forEach((product) => {
+          let allowance;
+          if (product.forServices.includes('keybot')) {
+            allowance = product.serviceRestrictions.keybotMaxServices;
+          }
+          serviceAllowance += allowance;
+        });
+      });
+
+      if (currentServices >= serviceAllowance) {
+        throw new Error('Not enough allowance on current billing plan.');
+      }
+
       const service = await context.db.mutation.createKeybotService({
         data: {
           name: args.name,
@@ -78,7 +114,7 @@ const Mutation = {
 
       return service;
     } catch (e) {
-      throw new Error('Failed to create Keybot service');
+      throw e;
     }
   },
   updateKeybotCredentials: async (parent, args, context, info) => {

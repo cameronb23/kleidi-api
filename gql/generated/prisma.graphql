@@ -1,5 +1,9 @@
 # source: https://us1.prisma.sh/cameron-b-4d8f44/kleidi/dev
-# timestamp: Sun Jan 27 2019 00:43:26 GMT-0500 (Eastern Standard Time)
+# timestamp: Mon Jan 28 2019 00:35:58 GMT-0500 (Eastern Standard Time)
+
+type AggregateBillingPlan {
+  count: Int!
+}
 
 type AggregateKeybotCredentials {
   count: Int!
@@ -26,6 +30,284 @@ type BatchPayload {
   count: Long!
 }
 
+type BillingPlan implements Node {
+  id: ID!
+  createdAt: DateTime!
+  associatedProducts(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Product!]
+  forUser: User!
+}
+
+"""A connection to a list of items."""
+type BillingPlanConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [BillingPlanEdge]!
+  aggregate: AggregateBillingPlan!
+}
+
+input BillingPlanCreateInput {
+  associatedProducts: ProductCreateManyInput
+  forUser: UserCreateOneWithoutBillingPlansInput!
+}
+
+input BillingPlanCreateManyWithoutForUserInput {
+  create: [BillingPlanCreateWithoutForUserInput!]
+  connect: [BillingPlanWhereUniqueInput!]
+}
+
+input BillingPlanCreateWithoutForUserInput {
+  associatedProducts: ProductCreateManyInput
+}
+
+"""An edge in a connection."""
+type BillingPlanEdge {
+  """The item at the end of the edge."""
+  node: BillingPlan!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum BillingPlanOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type BillingPlanPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+}
+
+input BillingPlanScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [BillingPlanScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [BillingPlanScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [BillingPlanScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+}
+
+type BillingPlanSubscriptionPayload {
+  mutation: MutationType!
+  node: BillingPlan
+  updatedFields: [String!]
+  previousValues: BillingPlanPreviousValues
+}
+
+input BillingPlanSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [BillingPlanSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [BillingPlanSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [BillingPlanSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: BillingPlanWhereInput
+}
+
+input BillingPlanUpdateInput {
+  associatedProducts: ProductUpdateManyInput
+  forUser: UserUpdateOneRequiredWithoutBillingPlansInput
+}
+
+input BillingPlanUpdateManyWithoutForUserInput {
+  create: [BillingPlanCreateWithoutForUserInput!]
+  connect: [BillingPlanWhereUniqueInput!]
+  set: [BillingPlanWhereUniqueInput!]
+  disconnect: [BillingPlanWhereUniqueInput!]
+  delete: [BillingPlanWhereUniqueInput!]
+  update: [BillingPlanUpdateWithWhereUniqueWithoutForUserInput!]
+  deleteMany: [BillingPlanScalarWhereInput!]
+  upsert: [BillingPlanUpsertWithWhereUniqueWithoutForUserInput!]
+}
+
+input BillingPlanUpdateWithoutForUserDataInput {
+  associatedProducts: ProductUpdateManyInput
+}
+
+input BillingPlanUpdateWithWhereUniqueWithoutForUserInput {
+  where: BillingPlanWhereUniqueInput!
+  data: BillingPlanUpdateWithoutForUserDataInput!
+}
+
+input BillingPlanUpsertWithWhereUniqueWithoutForUserInput {
+  where: BillingPlanWhereUniqueInput!
+  update: BillingPlanUpdateWithoutForUserDataInput!
+  create: BillingPlanCreateWithoutForUserInput!
+}
+
+input BillingPlanWhereInput {
+  """Logical AND on all given filters."""
+  AND: [BillingPlanWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [BillingPlanWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [BillingPlanWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  associatedProducts_every: ProductWhereInput
+  associatedProducts_some: ProductWhereInput
+  associatedProducts_none: ProductWhereInput
+  forUser: UserWhereInput
+}
+
+input BillingPlanWhereUniqueInput {
+  id: ID
+}
+
 enum BillingType {
   ONE_TIME
   RECURRING
@@ -37,6 +319,9 @@ enum CloudProvider {
 }
 
 scalar DateTime
+
+"""Raw JSON value"""
+scalar Json
 
 type KeybotCredentials implements Node {
   id: ID!
@@ -928,35 +1213,40 @@ Long can represent values between -(2^63) and 2^63 - 1.
 scalar Long
 
 type Mutation {
-  createProduct(data: ProductCreateInput!): Product!
+  createBillingPlan(data: BillingPlanCreateInput!): BillingPlan!
+  createRole(data: RoleCreateInput!): Role!
   createKeybotService(data: KeybotServiceCreateInput!): KeybotService!
   createKeybotCredentials(data: KeybotCredentialsCreateInput!): KeybotCredentials!
-  createRole(data: RoleCreateInput!): Role!
+  createProduct(data: ProductCreateInput!): Product!
   createUser(data: UserCreateInput!): User!
-  updateProduct(data: ProductUpdateInput!, where: ProductWhereUniqueInput!): Product
+  updateBillingPlan(data: BillingPlanUpdateInput!, where: BillingPlanWhereUniqueInput!): BillingPlan
+  updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
   updateKeybotService(data: KeybotServiceUpdateInput!, where: KeybotServiceWhereUniqueInput!): KeybotService
   updateKeybotCredentials(data: KeybotCredentialsUpdateInput!, where: KeybotCredentialsWhereUniqueInput!): KeybotCredentials
-  updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
+  updateProduct(data: ProductUpdateInput!, where: ProductWhereUniqueInput!): Product
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
-  deleteProduct(where: ProductWhereUniqueInput!): Product
+  deleteBillingPlan(where: BillingPlanWhereUniqueInput!): BillingPlan
+  deleteRole(where: RoleWhereUniqueInput!): Role
   deleteKeybotService(where: KeybotServiceWhereUniqueInput!): KeybotService
   deleteKeybotCredentials(where: KeybotCredentialsWhereUniqueInput!): KeybotCredentials
-  deleteRole(where: RoleWhereUniqueInput!): Role
+  deleteProduct(where: ProductWhereUniqueInput!): Product
   deleteUser(where: UserWhereUniqueInput!): User
-  upsertProduct(where: ProductWhereUniqueInput!, create: ProductCreateInput!, update: ProductUpdateInput!): Product!
+  upsertBillingPlan(where: BillingPlanWhereUniqueInput!, create: BillingPlanCreateInput!, update: BillingPlanUpdateInput!): BillingPlan!
+  upsertRole(where: RoleWhereUniqueInput!, create: RoleCreateInput!, update: RoleUpdateInput!): Role!
   upsertKeybotService(where: KeybotServiceWhereUniqueInput!, create: KeybotServiceCreateInput!, update: KeybotServiceUpdateInput!): KeybotService!
   upsertKeybotCredentials(where: KeybotCredentialsWhereUniqueInput!, create: KeybotCredentialsCreateInput!, update: KeybotCredentialsUpdateInput!): KeybotCredentials!
-  upsertRole(where: RoleWhereUniqueInput!, create: RoleCreateInput!, update: RoleUpdateInput!): Role!
+  upsertProduct(where: ProductWhereUniqueInput!, create: ProductCreateInput!, update: ProductUpdateInput!): Product!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
-  updateManyProducts(data: ProductUpdateManyMutationInput!, where: ProductWhereInput): BatchPayload!
+  updateManyRoles(data: RoleUpdateManyMutationInput!, where: RoleWhereInput): BatchPayload!
   updateManyKeybotServices(data: KeybotServiceUpdateManyMutationInput!, where: KeybotServiceWhereInput): BatchPayload!
   updateManyKeybotCredentialses(data: KeybotCredentialsUpdateManyMutationInput!, where: KeybotCredentialsWhereInput): BatchPayload!
-  updateManyRoles(data: RoleUpdateManyMutationInput!, where: RoleWhereInput): BatchPayload!
+  updateManyProducts(data: ProductUpdateManyMutationInput!, where: ProductWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
-  deleteManyProducts(where: ProductWhereInput): BatchPayload!
+  deleteManyBillingPlans(where: BillingPlanWhereInput): BatchPayload!
+  deleteManyRoles(where: RoleWhereInput): BatchPayload!
   deleteManyKeybotServices(where: KeybotServiceWhereInput): BatchPayload!
   deleteManyKeybotCredentialses(where: KeybotCredentialsWhereInput): BatchPayload!
-  deleteManyRoles(where: RoleWhereInput): BatchPayload!
+  deleteManyProducts(where: ProductWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
 }
 
@@ -1013,7 +1303,8 @@ type Product implements Node {
   price_currency: String!
   priceFluctuates: Boolean
   billingType: BillingType
-  forService: String!
+  forServices: [String!]!
+  serviceRestrictions: Json
   requiresContact: Boolean!
 }
 
@@ -1031,6 +1322,10 @@ input ProductCreatefeaturesInput {
   set: [String!]
 }
 
+input ProductCreateforServicesInput {
+  set: [String!]
+}
+
 input ProductCreateInput {
   title: String!
   active: Boolean
@@ -1039,9 +1334,15 @@ input ProductCreateInput {
   price_currency: String!
   priceFluctuates: Boolean
   billingType: BillingType
-  forService: String!
+  serviceRestrictions: Json
   requiresContact: Boolean
   features: ProductCreatefeaturesInput
+  forServices: ProductCreateforServicesInput
+}
+
+input ProductCreateManyInput {
+  create: [ProductCreateInput!]
+  connect: [ProductWhereUniqueInput!]
 }
 
 """An edge in a connection."""
@@ -1072,8 +1373,8 @@ enum ProductOrderByInput {
   priceFluctuates_DESC
   billingType_ASC
   billingType_DESC
-  forService_ASC
-  forService_DESC
+  serviceRestrictions_ASC
+  serviceRestrictions_DESC
   requiresContact_ASC
   requiresContact_DESC
   updatedAt_ASC
@@ -1091,8 +1392,246 @@ type ProductPreviousValues {
   price_currency: String!
   priceFluctuates: Boolean
   billingType: BillingType
-  forService: String!
+  forServices: [String!]!
+  serviceRestrictions: Json
   requiresContact: Boolean!
+}
+
+input ProductScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProductScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProductScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProductScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  title: String
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values that are contained in given list."""
+  title_in: [String!]
+
+  """All values that are not contained in given list."""
+  title_not_in: [String!]
+
+  """All values less than the given value."""
+  title_lt: String
+
+  """All values less than or equal the given value."""
+  title_lte: String
+
+  """All values greater than the given value."""
+  title_gt: String
+
+  """All values greater than or equal the given value."""
+  title_gte: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values not ending with the given string."""
+  title_not_ends_with: String
+  active: Boolean
+
+  """All values that are not equal to given value."""
+  active_not: Boolean
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  price: Float
+
+  """All values that are not equal to given value."""
+  price_not: Float
+
+  """All values that are contained in given list."""
+  price_in: [Float!]
+
+  """All values that are not contained in given list."""
+  price_not_in: [Float!]
+
+  """All values less than the given value."""
+  price_lt: Float
+
+  """All values less than or equal the given value."""
+  price_lte: Float
+
+  """All values greater than the given value."""
+  price_gt: Float
+
+  """All values greater than or equal the given value."""
+  price_gte: Float
+  price_currency: String
+
+  """All values that are not equal to given value."""
+  price_currency_not: String
+
+  """All values that are contained in given list."""
+  price_currency_in: [String!]
+
+  """All values that are not contained in given list."""
+  price_currency_not_in: [String!]
+
+  """All values less than the given value."""
+  price_currency_lt: String
+
+  """All values less than or equal the given value."""
+  price_currency_lte: String
+
+  """All values greater than the given value."""
+  price_currency_gt: String
+
+  """All values greater than or equal the given value."""
+  price_currency_gte: String
+
+  """All values containing the given string."""
+  price_currency_contains: String
+
+  """All values not containing the given string."""
+  price_currency_not_contains: String
+
+  """All values starting with the given string."""
+  price_currency_starts_with: String
+
+  """All values not starting with the given string."""
+  price_currency_not_starts_with: String
+
+  """All values ending with the given string."""
+  price_currency_ends_with: String
+
+  """All values not ending with the given string."""
+  price_currency_not_ends_with: String
+  priceFluctuates: Boolean
+
+  """All values that are not equal to given value."""
+  priceFluctuates_not: Boolean
+  billingType: BillingType
+
+  """All values that are not equal to given value."""
+  billingType_not: BillingType
+
+  """All values that are contained in given list."""
+  billingType_in: [BillingType!]
+
+  """All values that are not contained in given list."""
+  billingType_not_in: [BillingType!]
+  requiresContact: Boolean
+
+  """All values that are not equal to given value."""
+  requiresContact_not: Boolean
 }
 
 type ProductSubscriptionPayload {
@@ -1134,7 +1673,25 @@ input ProductSubscriptionWhereInput {
   node: ProductWhereInput
 }
 
+input ProductUpdateDataInput {
+  title: String
+  active: Boolean
+  description: String
+  price: Float
+  price_currency: String
+  priceFluctuates: Boolean
+  billingType: BillingType
+  serviceRestrictions: Json
+  requiresContact: Boolean
+  features: ProductUpdatefeaturesInput
+  forServices: ProductUpdateforServicesInput
+}
+
 input ProductUpdatefeaturesInput {
+  set: [String!]
+}
+
+input ProductUpdateforServicesInput {
   set: [String!]
 }
 
@@ -1146,9 +1703,36 @@ input ProductUpdateInput {
   price_currency: String
   priceFluctuates: Boolean
   billingType: BillingType
-  forService: String
+  serviceRestrictions: Json
   requiresContact: Boolean
   features: ProductUpdatefeaturesInput
+  forServices: ProductUpdateforServicesInput
+}
+
+input ProductUpdateManyDataInput {
+  title: String
+  active: Boolean
+  description: String
+  price: Float
+  price_currency: String
+  priceFluctuates: Boolean
+  billingType: BillingType
+  serviceRestrictions: Json
+  requiresContact: Boolean
+  features: ProductUpdatefeaturesInput
+  forServices: ProductUpdateforServicesInput
+}
+
+input ProductUpdateManyInput {
+  create: [ProductCreateInput!]
+  connect: [ProductWhereUniqueInput!]
+  set: [ProductWhereUniqueInput!]
+  disconnect: [ProductWhereUniqueInput!]
+  delete: [ProductWhereUniqueInput!]
+  update: [ProductUpdateWithWhereUniqueNestedInput!]
+  updateMany: [ProductUpdateManyWithWhereNestedInput!]
+  deleteMany: [ProductScalarWhereInput!]
+  upsert: [ProductUpsertWithWhereUniqueNestedInput!]
 }
 
 input ProductUpdateManyMutationInput {
@@ -1159,9 +1743,26 @@ input ProductUpdateManyMutationInput {
   price_currency: String
   priceFluctuates: Boolean
   billingType: BillingType
-  forService: String
+  serviceRestrictions: Json
   requiresContact: Boolean
   features: ProductUpdatefeaturesInput
+  forServices: ProductUpdateforServicesInput
+}
+
+input ProductUpdateManyWithWhereNestedInput {
+  where: ProductScalarWhereInput!
+  data: ProductUpdateManyDataInput!
+}
+
+input ProductUpdateWithWhereUniqueNestedInput {
+  where: ProductWhereUniqueInput!
+  data: ProductUpdateDataInput!
+}
+
+input ProductUpsertWithWhereUniqueNestedInput {
+  where: ProductWhereUniqueInput!
+  update: ProductUpdateDataInput!
+  create: ProductCreateInput!
 }
 
 input ProductWhereInput {
@@ -1395,46 +1996,6 @@ input ProductWhereInput {
 
   """All values that are not contained in given list."""
   billingType_not_in: [BillingType!]
-  forService: String
-
-  """All values that are not equal to given value."""
-  forService_not: String
-
-  """All values that are contained in given list."""
-  forService_in: [String!]
-
-  """All values that are not contained in given list."""
-  forService_not_in: [String!]
-
-  """All values less than the given value."""
-  forService_lt: String
-
-  """All values less than or equal the given value."""
-  forService_lte: String
-
-  """All values greater than the given value."""
-  forService_gt: String
-
-  """All values greater than or equal the given value."""
-  forService_gte: String
-
-  """All values containing the given string."""
-  forService_contains: String
-
-  """All values not containing the given string."""
-  forService_not_contains: String
-
-  """All values starting with the given string."""
-  forService_starts_with: String
-
-  """All values not starting with the given string."""
-  forService_not_starts_with: String
-
-  """All values ending with the given string."""
-  forService_ends_with: String
-
-  """All values not ending with the given string."""
-  forService_not_ends_with: String
   requiresContact: Boolean
 
   """All values that are not equal to given value."""
@@ -1446,20 +2007,23 @@ input ProductWhereUniqueInput {
 }
 
 type Query {
-  products(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Product]!
+  billingPlans(where: BillingPlanWhereInput, orderBy: BillingPlanOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [BillingPlan]!
+  roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role]!
   keybotServices(where: KeybotServiceWhereInput, orderBy: KeybotServiceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [KeybotService]!
   keybotCredentialses(where: KeybotCredentialsWhereInput, orderBy: KeybotCredentialsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [KeybotCredentials]!
-  roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role]!
+  products(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Product]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
-  product(where: ProductWhereUniqueInput!): Product
+  billingPlan(where: BillingPlanWhereUniqueInput!): BillingPlan
+  role(where: RoleWhereUniqueInput!): Role
   keybotService(where: KeybotServiceWhereUniqueInput!): KeybotService
   keybotCredentials(where: KeybotCredentialsWhereUniqueInput!): KeybotCredentials
-  role(where: RoleWhereUniqueInput!): Role
+  product(where: ProductWhereUniqueInput!): Product
   user(where: UserWhereUniqueInput!): User
-  productsConnection(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProductConnection!
+  billingPlansConnection(where: BillingPlanWhereInput, orderBy: BillingPlanOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BillingPlanConnection!
+  rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
   keybotServicesConnection(where: KeybotServiceWhereInput, orderBy: KeybotServiceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): KeybotServiceConnection!
   keybotCredentialsesConnection(where: KeybotCredentialsWhereInput, orderBy: KeybotCredentialsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): KeybotCredentialsConnection!
-  rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
+  productsConnection(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProductConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
 
   """Fetches an object given its ID"""
@@ -1490,16 +2054,21 @@ type RoleConnection {
 input RoleCreateInput {
   name: String!
   permissions: RoleCreatepermissionsInput
-  attachedTo: UserCreateManyInput
+  attachedTo: UserCreateManyWithoutRolesInput
 }
 
-input RoleCreateManyInput {
-  create: [RoleCreateInput!]
+input RoleCreateManyWithoutAttachedToInput {
+  create: [RoleCreateWithoutAttachedToInput!]
   connect: [RoleWhereUniqueInput!]
 }
 
 input RoleCreatepermissionsInput {
   set: [Permission!]
+}
+
+input RoleCreateWithoutAttachedToInput {
+  name: String!
+  permissions: RoleCreatepermissionsInput
 }
 
 """An edge in a connection."""
@@ -1681,16 +2250,10 @@ input RoleSubscriptionWhereInput {
   node: RoleWhereInput
 }
 
-input RoleUpdateDataInput {
-  name: String
-  permissions: RoleUpdatepermissionsInput
-  attachedTo: UserUpdateManyInput
-}
-
 input RoleUpdateInput {
   name: String
   permissions: RoleUpdatepermissionsInput
-  attachedTo: UserUpdateManyInput
+  attachedTo: UserUpdateManyWithoutRolesInput
 }
 
 input RoleUpdateManyDataInput {
@@ -1698,21 +2261,21 @@ input RoleUpdateManyDataInput {
   permissions: RoleUpdatepermissionsInput
 }
 
-input RoleUpdateManyInput {
-  create: [RoleCreateInput!]
+input RoleUpdateManyMutationInput {
+  name: String
+  permissions: RoleUpdatepermissionsInput
+}
+
+input RoleUpdateManyWithoutAttachedToInput {
+  create: [RoleCreateWithoutAttachedToInput!]
   connect: [RoleWhereUniqueInput!]
   set: [RoleWhereUniqueInput!]
   disconnect: [RoleWhereUniqueInput!]
   delete: [RoleWhereUniqueInput!]
-  update: [RoleUpdateWithWhereUniqueNestedInput!]
+  update: [RoleUpdateWithWhereUniqueWithoutAttachedToInput!]
   updateMany: [RoleUpdateManyWithWhereNestedInput!]
   deleteMany: [RoleScalarWhereInput!]
-  upsert: [RoleUpsertWithWhereUniqueNestedInput!]
-}
-
-input RoleUpdateManyMutationInput {
-  name: String
-  permissions: RoleUpdatepermissionsInput
+  upsert: [RoleUpsertWithWhereUniqueWithoutAttachedToInput!]
 }
 
 input RoleUpdateManyWithWhereNestedInput {
@@ -1724,15 +2287,20 @@ input RoleUpdatepermissionsInput {
   set: [Permission!]
 }
 
-input RoleUpdateWithWhereUniqueNestedInput {
-  where: RoleWhereUniqueInput!
-  data: RoleUpdateDataInput!
+input RoleUpdateWithoutAttachedToDataInput {
+  name: String
+  permissions: RoleUpdatepermissionsInput
 }
 
-input RoleUpsertWithWhereUniqueNestedInput {
+input RoleUpdateWithWhereUniqueWithoutAttachedToInput {
   where: RoleWhereUniqueInput!
-  update: RoleUpdateDataInput!
-  create: RoleCreateInput!
+  data: RoleUpdateWithoutAttachedToDataInput!
+}
+
+input RoleUpsertWithWhereUniqueWithoutAttachedToInput {
+  where: RoleWhereUniqueInput!
+  update: RoleUpdateWithoutAttachedToDataInput!
+  create: RoleCreateWithoutAttachedToInput!
 }
 
 input RoleWhereInput {
@@ -1856,10 +2424,11 @@ input RoleWhereUniqueInput {
 }
 
 type Subscription {
-  product(where: ProductSubscriptionWhereInput): ProductSubscriptionPayload
+  billingPlan(where: BillingPlanSubscriptionWhereInput): BillingPlanSubscriptionPayload
+  role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
   keybotService(where: KeybotServiceSubscriptionWhereInput): KeybotServiceSubscriptionPayload
   keybotCredentials(where: KeybotCredentialsSubscriptionWhereInput): KeybotCredentialsSubscriptionPayload
-  role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
+  product(where: ProductSubscriptionWhereInput): ProductSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
@@ -1876,6 +2445,7 @@ type User implements Node {
   password: String!
   name: String!
   roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role!]
+  billingPlans(where: BillingPlanWhereInput, orderBy: BillingPlanOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [BillingPlan!]
 }
 
 """A connection to a list of items."""
@@ -1893,17 +2463,39 @@ input UserCreateInput {
   salt: String!
   password: String!
   name: String!
-  roles: RoleCreateManyInput
+  roles: RoleCreateManyWithoutAttachedToInput
+  billingPlans: BillingPlanCreateManyWithoutForUserInput
 }
 
-input UserCreateManyInput {
-  create: [UserCreateInput!]
+input UserCreateManyWithoutRolesInput {
+  create: [UserCreateWithoutRolesInput!]
   connect: [UserWhereUniqueInput!]
 }
 
 input UserCreateOneInput {
   create: UserCreateInput
   connect: UserWhereUniqueInput
+}
+
+input UserCreateOneWithoutBillingPlansInput {
+  create: UserCreateWithoutBillingPlansInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutBillingPlansInput {
+  email: String!
+  salt: String!
+  password: String!
+  name: String!
+  roles: RoleCreateManyWithoutAttachedToInput
+}
+
+input UserCreateWithoutRolesInput {
+  email: String!
+  salt: String!
+  password: String!
+  name: String!
+  billingPlans: BillingPlanCreateManyWithoutForUserInput
 }
 
 """An edge in a connection."""
@@ -2218,7 +2810,8 @@ input UserUpdateDataInput {
   salt: String
   password: String
   name: String
-  roles: RoleUpdateManyInput
+  roles: RoleUpdateManyWithoutAttachedToInput
+  billingPlans: BillingPlanUpdateManyWithoutForUserInput
 }
 
 input UserUpdateInput {
@@ -2226,7 +2819,8 @@ input UserUpdateInput {
   salt: String
   password: String
   name: String
-  roles: RoleUpdateManyInput
+  roles: RoleUpdateManyWithoutAttachedToInput
+  billingPlans: BillingPlanUpdateManyWithoutForUserInput
 }
 
 input UserUpdateManyDataInput {
@@ -2236,23 +2830,23 @@ input UserUpdateManyDataInput {
   name: String
 }
 
-input UserUpdateManyInput {
-  create: [UserCreateInput!]
-  connect: [UserWhereUniqueInput!]
-  set: [UserWhereUniqueInput!]
-  disconnect: [UserWhereUniqueInput!]
-  delete: [UserWhereUniqueInput!]
-  update: [UserUpdateWithWhereUniqueNestedInput!]
-  updateMany: [UserUpdateManyWithWhereNestedInput!]
-  deleteMany: [UserScalarWhereInput!]
-  upsert: [UserUpsertWithWhereUniqueNestedInput!]
-}
-
 input UserUpdateManyMutationInput {
   email: String
   salt: String
   password: String
   name: String
+}
+
+input UserUpdateManyWithoutRolesInput {
+  create: [UserCreateWithoutRolesInput!]
+  connect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  delete: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueWithoutRolesInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
+  deleteMany: [UserScalarWhereInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutRolesInput!]
 }
 
 input UserUpdateManyWithWhereNestedInput {
@@ -2267,9 +2861,32 @@ input UserUpdateOneRequiredInput {
   upsert: UserUpsertNestedInput
 }
 
-input UserUpdateWithWhereUniqueNestedInput {
+input UserUpdateOneRequiredWithoutBillingPlansInput {
+  create: UserCreateWithoutBillingPlansInput
+  connect: UserWhereUniqueInput
+  update: UserUpdateWithoutBillingPlansDataInput
+  upsert: UserUpsertWithoutBillingPlansInput
+}
+
+input UserUpdateWithoutBillingPlansDataInput {
+  email: String
+  salt: String
+  password: String
+  name: String
+  roles: RoleUpdateManyWithoutAttachedToInput
+}
+
+input UserUpdateWithoutRolesDataInput {
+  email: String
+  salt: String
+  password: String
+  name: String
+  billingPlans: BillingPlanUpdateManyWithoutForUserInput
+}
+
+input UserUpdateWithWhereUniqueWithoutRolesInput {
   where: UserWhereUniqueInput!
-  data: UserUpdateDataInput!
+  data: UserUpdateWithoutRolesDataInput!
 }
 
 input UserUpsertNestedInput {
@@ -2277,10 +2894,15 @@ input UserUpsertNestedInput {
   create: UserCreateInput!
 }
 
-input UserUpsertWithWhereUniqueNestedInput {
+input UserUpsertWithoutBillingPlansInput {
+  update: UserUpdateWithoutBillingPlansDataInput!
+  create: UserCreateWithoutBillingPlansInput!
+}
+
+input UserUpsertWithWhereUniqueWithoutRolesInput {
   where: UserWhereUniqueInput!
-  update: UserUpdateDataInput!
-  create: UserCreateInput!
+  update: UserUpdateWithoutRolesDataInput!
+  create: UserCreateWithoutRolesInput!
 }
 
 input UserWhereInput {
@@ -2517,6 +3139,9 @@ input UserWhereInput {
   roles_every: RoleWhereInput
   roles_some: RoleWhereInput
   roles_none: RoleWhereInput
+  billingPlans_every: BillingPlanWhereInput
+  billingPlans_some: BillingPlanWhereInput
+  billingPlans_none: BillingPlanWhereInput
 }
 
 input UserWhereUniqueInput {

@@ -49,6 +49,14 @@ type User {
   password: String! @private
   name: String!
   roles: [Role]
+  billingPlans: [BillingPlan]
+}
+
+type BillingPlan {
+  id: ID!
+  createdAt: DateTime!
+  associatedProducts: [Product]!
+  forUser: User!
 }
 
 type Product {
