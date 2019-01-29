@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/cameron-b-4d8f44/kleidi/dev
-# timestamp: Mon Jan 28 2019 00:35:58 GMT-0500 (Eastern Standard Time)
+# timestamp: Mon Jan 28 2019 21:41:39 GMT-0500 (Eastern Standard Time)
 
 type AggregateBillingPlan {
   count: Int!
@@ -737,6 +737,7 @@ type KeybotService implements Node {
   lastDeploy: DateTime
   updateType: UpdateMethod
   credentials: KeybotCredentials
+  customFiles: Json
 }
 
 """A connection to a list of items."""
@@ -758,6 +759,7 @@ input KeybotServiceCreateInput {
   currentVersion: String
   lastDeploy: DateTime
   updateType: UpdateMethod
+  customFiles: Json
   owner: UserCreateOneInput!
   credentials: KeybotCredentialsCreateOneWithoutForServiceInput
 }
@@ -776,6 +778,7 @@ input KeybotServiceCreateWithoutCredentialsInput {
   currentVersion: String
   lastDeploy: DateTime
   updateType: UpdateMethod
+  customFiles: Json
   owner: UserCreateOneInput!
 }
 
@@ -809,6 +812,8 @@ enum KeybotServiceOrderByInput {
   lastDeploy_DESC
   updateType_ASC
   updateType_DESC
+  customFiles_ASC
+  customFiles_DESC
   updatedAt_ASC
   updatedAt_DESC
 }
@@ -824,6 +829,7 @@ type KeybotServicePreviousValues {
   currentVersion: String
   lastDeploy: DateTime
   updateType: UpdateMethod
+  customFiles: Json
 }
 
 type KeybotServiceSubscriptionPayload {
@@ -874,6 +880,7 @@ input KeybotServiceUpdateInput {
   currentVersion: String
   lastDeploy: DateTime
   updateType: UpdateMethod
+  customFiles: Json
   owner: UserUpdateOneRequiredInput
   credentials: KeybotCredentialsUpdateOneWithoutForServiceInput
 }
@@ -887,6 +894,7 @@ input KeybotServiceUpdateManyMutationInput {
   currentVersion: String
   lastDeploy: DateTime
   updateType: UpdateMethod
+  customFiles: Json
 }
 
 input KeybotServiceUpdateOneWithoutCredentialsInput {
@@ -907,6 +915,7 @@ input KeybotServiceUpdateWithoutCredentialsDataInput {
   currentVersion: String
   lastDeploy: DateTime
   updateType: UpdateMethod
+  customFiles: Json
   owner: UserUpdateOneRequiredInput
 }
 

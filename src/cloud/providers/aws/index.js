@@ -22,6 +22,27 @@ export const getClusters = async () => {
   }
 };
 
+/**
+ * Retrieves all clusters on the AWS cloud (up to 50)
+ */
+export const getTagsForObject = async (bucket, objectKey) => {
+  const params = {
+    Bucket: bucket,
+    Key: objectKey
+  };
+  try {
+    const res = await S3.getObjectTagging(params).promise();
+
+    if (res != null) {
+      return res.TagSet;
+    }
+
+    return null;
+  } catch (e) {
+    throw new Error('Error attempting to fetch clusters from AWS.');
+  }
+};
+
 
 /**
  * Creates a new ECS cluster for a service
@@ -239,6 +260,84 @@ export const getCustomResources = async (serviceId) => {
     throw new Error(`Error fetching custom resources from S3: ${e}`);
   }
 };
+
+export const getCustomServiceResources = (serviceId) => {
+  const params = {
+    Bucket: 'kleidi-services',
+    Prefix: `${serviceId}/customResources`
+  };
+
+  // eslint-disable-next-line
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await S3.listObjectsV2(params).promise();
+
+      const objects = res.Contents;
+
+      const resources = [];
+
+      async.each(objects, async (obj, callback) => {
+        const objParams = {
+          Bucket: 'kleidi-services',
+          Key: obj.Key
+        };
+
+        try {
+          const objTagging = await S3.getObjectTagging(objParams).promise();
+
+          let type = 'RESOURCE';
+          let viewPath = null;
+
+          const typeQuery = _.findWhere(objTagging.TagSet, { Key: 'KLEIDI_TYPE' });
+          const viewPathQuery = _.findWhere(objTagging.TagSet, { Key: 'KLEIDI_VIEW_PATH' });
+
+          if (typeQuery) {
+            type = typeQuery.Value;
+          }
+
+          if (viewPathQuery) {
+            viewPath = viewPathQuery.Value;
+          }
+
+          resources.push({
+            path: (obj.Key.split('/customResources/')[1]),
+            fileName: obj.Key.substring(obj.Key.lastIndexOf('/')),
+            type,
+            viewPath,
+            lastUpdated: obj.LastModified
+          });
+          return callback();
+        } catch (e) {
+          return callback(e);
+        }
+      }, (err) => {
+        if (err) {
+          throw err;
+        }
+
+        return resolve(resources);
+      });
+    } catch (e) {
+      return reject(e);
+    }
+  });
+};
+
+export const deleteFile = async (serviceId, filePath) => {
+  const params = {
+    Bucket: 'kleidi-services',
+    Key: `${serviceId}/customResources/${filePath}`
+  };
+
+  try {
+    await S3.deleteObject(params).promise();
+
+    return;
+  } catch (e) {
+    throw new Error(`Error uploading file to S3: ${e}`);
+  }
+};
+
 
 export const uploadFile = async (serviceId, opts, fileStream) => {
   const { filePath, fileType } = opts;

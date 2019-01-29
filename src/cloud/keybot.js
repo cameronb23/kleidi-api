@@ -1,8 +1,12 @@
+import _ from 'underscore';
 import {
   createTaskDefinition,
   retrieveServiceStatus,
   deployService as deployServiceAws,
-  uploadFile
+  uploadFile,
+  getTagsForObject,
+  getCustomServiceResources,
+  deleteFile
 } from './providers/aws';
 
 export const createKeybotService = async (serviceId, serviceName, serviceOwnerId, provider, db) => {
@@ -15,7 +19,7 @@ export const createKeybotService = async (serviceId, serviceName, serviceOwnerId
           },
           data: {
             currentOperation: 'IDLE',
-            currentOperationStatus: 'Successfully created cloud service. Ready to deploy'
+            currentOperationStatus: 'Successfully created cloud service. Add credentials and deploy!'
           }
         }, '{ id }');
       } catch (e) {
@@ -47,6 +51,9 @@ export const pingServiceStatus = async (service, db) => {
   switch (service.cloudProvider) {
     case 'AWS': {
       try {
+        if (!service.cloudResourceId) {
+          return;
+        }
         const res = await retrieveServiceStatus(service, 'arn:aws:ecs:us-east-1:758556097563:cluster/Keybot-Deployment-Cluster');
         const { currentOperation, currentOperationStatus, lastDeploy } = res;
         await db.mutation.updateKeybotService({
@@ -82,12 +89,20 @@ export const deployService = async (service, credentials, db) => {
         console.log('Task definition ARN: ', defArn);
         const serviceArn = await deployServiceAws(service, 'arn:aws:ecs:us-east-1:758556097563:cluster/Keybot-Deployment-Cluster'); // cluster ARN
         console.log('Service ARN: ', serviceArn);
+        const latestTags = await getTagsForObject('keybot-prod', 'releases/release.zip');
+
+        let latestVersion = null;
+
+        if (latestTags) {
+          latestVersion = _.findWhere(latestTags, { Key: 'VERSION' }).Value;
+        }
 
         await db.mutation.updateKeybotService({
           where: {
             id: service.id
           },
           data: {
+            currentVersion: latestVersion,
             cloudResourceId: serviceArn,
             currentOperation: 'DEPLOYING',
             currentOperationStatus: 'Deploying new patch to instances'
@@ -118,19 +133,39 @@ export const deployService = async (service, credentials, db) => {
   }
 };
 
-export const uploadCustomResource = async (serviceId, provider, opts, fileStream) => {
-  switch (provider) {
-    case 'AWS': {
-      try {
-        const resLocation = await uploadFile(serviceId, opts, fileStream);
-        return resLocation;
-      } catch (e) {
-        console.error('Error uploading file', e);
-        throw new Error(e);
+export const fetchCustomResources = async (serviceId, db) => {
+  try {
+    const json = await getCustomServiceResources(serviceId);
+
+    await db.mutation.updateKeybotService({
+      where: {
+        id: serviceId
+      },
+      data: {
+        customFiles: json
       }
-    }
-    default: {
-      return console.error('none');
-    }
+    });
+  } catch (e) {
+    console.error('Error fetching files', e);
+  }
+};
+
+export const deleteCustomResource = async (serviceId, filePath) => {
+  try {
+    await deleteFile(serviceId, filePath);
+    return;
+  } catch (e) {
+    console.error('Error delete file', e);
+    throw new Error(e);
+  }
+};
+
+export const uploadCustomResource = async (serviceId, provider, opts, fileStream) => {
+  try {
+    const resLocation = await uploadFile(serviceId, opts, fileStream);
+    return resLocation;
+  } catch (e) {
+    console.error('Error uploading file', e);
+    throw new Error(e);
   }
 };

@@ -21,6 +21,8 @@ type Query {
   # keybot service queries
   ownedKeybotServices: [KeybotService]! @isAuthenticated
   ownedKeybotService(serviceId: String!): [KeybotService]! @isAuthenticated
+  keybotServiceCredentials(serviceId: String!): [KeybotCredentials]! @isAuthenticated
+  keybotCustomFiles(serviceId: String!): OperationResponse! @isAuthenticated
 }
 
 type Mutation {
@@ -33,12 +35,13 @@ type Mutation {
   deleteRole(id: ID!): OperationResponse!
 
   # Keybot service mutations
-  createKeybotService(name: String!, updateType: UpdateMethod!): KeybotService! @isAuthenticated
+  createKeybotService(name: String!, updateType: UpdateMethod!): OperationResponse! @isAuthenticated
   uploadCustomFile(file: Upload!, filePath: String!, fileType: String!, viewPath: String, serviceId: String!): OperationResponse! @isAuthenticated
-  deployService(id: String!): KeybotService! @isAuthenticated
+  deleteCustomFile(serviceId: String!, filePath: String!): OperationResponse! @isAuthenticated
+  deployService(id: String!): OperationResponse! @isAuthenticated
 
   # updateKeybotCredentials(serviceId: String!, production: Boolean!, sessionSecret: String!, mongoUrl: String!, discordToken: String!, encryptionKey: String!): KeybotCredentials! @isAuthenticated
-  updateKeybotCredentials(serviceId: String!, data: Json!): KeybotCredentials! @isAuthenticated
+  updateKeybotCredentials(serviceId: String!, data: Json!): OperationResponse! @isAuthenticated
 }
 
 type User {
@@ -88,6 +91,7 @@ type KeybotService {
   lastDeploy: DateTime
   updateType: UpdateMethod
   credentials: KeybotCredentials
+  customFiles: Json
 }
 
 type KeybotCredentials {

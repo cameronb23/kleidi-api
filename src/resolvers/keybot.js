@@ -2,7 +2,9 @@ import {
   createKeybotService,
   pingServiceStatus,
   deployService,
-  uploadCustomResource
+  fetchCustomResources,
+  uploadCustomResource,
+  deleteCustomResource
 } from '../cloud/keybot';
 import { encryptData, decryptData } from '../crypto';
 
@@ -48,7 +50,7 @@ const Query = {
         }
       }
     };
-    const serviceRes = await context.db.query.keybotServices(query, '{ id name cloudProvider }');
+    const serviceRes = await context.db.query.keybotServices(query, '{ id name cloudProvider cloudResourceId }');
 
     if (serviceRes.length > 0) {
       const service = serviceRes[0];
@@ -56,6 +58,40 @@ const Query = {
     }
 
     return context.db.query.keybotServices(query, info);
+  },
+  // eslint-disable-next-line max-len
+  keybotServiceCredentials: async (parent, args, context, info) => context.db.query.keybotCredentialses({
+    where: {
+      forService: { id: args.serviceId, owner: { id: context.user.id } }
+    }
+  }, info),
+  keybotCustomFiles: async (parent, args, context) => {
+    const query = {
+      where: {
+        id: args.serviceId,
+        owner: {
+          id: context.user.id
+        }
+      }
+    };
+    const serviceRes = await context.db.query.keybotServices(query, '{ id }');
+
+    if (serviceRes.length < 0) {
+      return {
+        status: 1,
+        error: 'No service found'
+      };
+    }
+
+    const serviceId = serviceRes[0].id;
+
+    // fetch custom files
+    fetchCustomResources(serviceId, context.db);
+
+    return {
+      status: 0,
+      resourceId: serviceId
+    };
   }
 };
 
@@ -73,7 +109,10 @@ const Mutation = {
       const { billingPlans } = userQuery;
 
       if (billingPlans.length === 0) {
-        throw new Error('Not enough allowance on current billing plan.');
+        return {
+          status: 1,
+          error: 'Not enough allowance on current billing plan.'
+        };
       }
 
       const serviceQuery = await context.db.query.keybotServices({
@@ -96,7 +135,10 @@ const Mutation = {
       });
 
       if (currentServices >= serviceAllowance) {
-        throw new Error('Not enough allowance on current billing plan.');
+        return {
+          status: 1,
+          error: 'Not enough allowance on current billing plan.'
+        };
       }
 
       const service = await context.db.mutation.createKeybotService({
@@ -112,7 +154,11 @@ const Mutation = {
 
       createKeybotService(service.id, args.name, context.user.id, 'AWS', context.db);
 
-      return service;
+      return {
+        resourceId: service.id,
+        status: 0,
+        message: 'Keybot service created successfully.'
+      };
     } catch (e) {
       throw e;
     }
@@ -126,12 +172,17 @@ const Mutation = {
       }, '{ id owner { id } credentials { id } }');
 
       if (serviceQuery == null) {
-        throw new Error('No service found.');
+        return {
+          status: 1,
+          error: 'No service found'
+        };
       }
 
       if (serviceQuery.owner.id !== context.user.id) {
         throw new Error('Unauthorized');
       }
+
+      console.log(data);
 
       let credentials;
       const encrypted = encryptFields(data);
@@ -154,9 +205,13 @@ const Mutation = {
         }, info);
       }
 
-      const decrypted = decryptFields(credentials);
+      decryptFields(credentials);
 
-      return decrypted;
+      return {
+        status: 0,
+        resourceId: credentials.id,
+        message: 'Updated credentials successfully'
+      };
     } catch (e) {
       console.error(e);
       throw e;
@@ -171,7 +226,10 @@ const Mutation = {
       }, '{ id owner { id } cloudResourceId cloudProvider name credentials { id } }');
 
       if (serviceQuery == null) {
-        throw new Error('No service found.');
+        return {
+          status: 1,
+          error: 'No service found.'
+        };
       }
 
       if (serviceQuery.owner.id !== context.user.id) {
@@ -181,32 +239,35 @@ const Mutation = {
       // found service & auth'd owner
       // fetch creds
 
+      if (!serviceQuery.credentials) {
+        return {
+          status: 1,
+          error: 'Please add credentials to this service before deploying.'
+        };
+      }
+
       const credentials = await context.db.query.keybotCredentials({
         where: {
           id: serviceQuery.credentials.id
         }
       }, '{ production sessionSecret mongoUrl discordToken encryptionKey }');
 
-      console.log(credentials);
-
-      if (
-        !credentials
-        || (!credentials.production
-          || !credentials.sessionSecret
-          || !credentials.mongoUrl
-          || !credentials.discordToken
-          || !credentials.encryptionKey
-        )
+      if (!credentials.production
+        || !credentials.sessionSecret
+        || !credentials.mongoUrl
+        || !credentials.discordToken
+        || !credentials.encryptionKey
       ) {
-        throw new Error('No credentials or non-complete credentials');
+        return {
+          status: 1,
+          error: 'Please fill in all credentials for this service before deploying.'
+        };
       }
-
-      console.log('creds: ', credentials);
 
       const unlockedCredentials = decryptFields(credentials);
 
       // update status and deploy
-      const res = await context.db.mutation.updateKeybotService({
+      await context.db.mutation.updateKeybotService({
         where: {
           id
         },
@@ -218,10 +279,52 @@ const Mutation = {
 
       deployService(serviceQuery, unlockedCredentials, context.db);
 
-      return res;
+      return {
+        status: 0,
+        resourceId: serviceQuery.id,
+        message: 'Successfully queued deployment'
+      };
     } catch (e) {
       console.error(e);
       throw e;
+    }
+  },
+  deleteCustomFile: async (parent, args, context) => {
+    const { serviceId, filePath } = args;
+
+    const serviceQuery = await context.db.query.keybotService({
+      where: {
+        id: serviceId
+      }
+    }, '{ id cloudProvider owner { id } }');
+
+    if (serviceQuery == null) {
+      return {
+        resourceId: null,
+        status: 1,
+        error: 'No service found with id provided'
+      };
+    }
+
+    if (serviceQuery.owner.id !== context.user.id) {
+      throw new Error('Unauthorized');
+    }
+
+    try {
+      await deleteCustomResource(serviceQuery.id, filePath);
+      await fetchCustomResources(serviceQuery.id, context.db);
+
+      return {
+        resourceId: serviceQuery.id,
+        status: 0,
+        message: 'Resource successfully deleted'
+      };
+    } catch (e) {
+      return {
+        resourceId: null,
+        status: 1,
+        error: 'Error deleting resource. Please try again later.'
+      };
     }
   },
   uploadCustomFile: async (parent, args, context) => {
@@ -236,7 +339,7 @@ const Mutation = {
       where: {
         id: serviceId
       }
-    }, '{ id cloudProvider }');
+    }, '{ id cloudProvider owner { id } }');
 
     if (serviceQuery == null) {
       return {
@@ -244,6 +347,10 @@ const Mutation = {
         status: 1,
         error: 'No service found with id provided'
       };
+    }
+
+    if (serviceQuery.owner.id !== context.user.id) {
+      throw new Error('Unauthorized');
     }
 
     const { id, cloudProvider } = serviceQuery;
