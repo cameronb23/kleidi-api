@@ -12,6 +12,8 @@ import { Prisma } from 'prisma-binding';
 // import our permission middleware
 // import Permissions from './permissions';
 
+import { init as initMailer } from './email';
+
 // import resolvers
 import Query from './resolvers/Query';
 import Mutation from './resolvers/Mutation';
@@ -53,6 +55,8 @@ const schema = makeExecutableSchema({
   resolvers,
   directiveResolvers
 });
+
+initMailer(process.env);
 
 const server = new GraphQLServer({
   schema,

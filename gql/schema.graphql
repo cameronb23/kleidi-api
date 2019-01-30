@@ -1,4 +1,4 @@
-# import Role, BillingType, CloudProvider, UpdateMethod, OperationType from "./generated/prisma.graphql"
+# import Role, BillingType, CloudProvider, UpdateMethod, OperationType, ServiceType from "./generated/prisma.graphql"
 
 scalar DateTime
 scalar Json
@@ -16,7 +16,7 @@ type Query {
   users: [User!]!
   roles: [Role]! @isAuthenticated @hasPermissions(permissions: ["SYSTEM_MANAGE_ROLES"])
   products: [Product]!
-  productsForService(service: String! active: Boolean): [Product]!
+  productsForService(service: ServiceType! active: Boolean): [Product]!
 
   # keybot service queries
   ownedKeybotServices: [KeybotService]! @isAuthenticated
@@ -28,6 +28,8 @@ type Query {
 type Mutation {
   createUser(email: String!, password: String!, name: String!): User!
   registerUser(email: String!, password: String!, name: String!): AuthPayload!
+  sendEmailActivation: OperationResponse! @isAuthenticated
+  verifyAccount(token: String!): OperationResponse! @isAuthenticated
   login(email: String!, password: String!): AuthPayload!
   
   createRole(name: String!, permissions: String): Role!
@@ -48,6 +50,8 @@ type User {
   id: ID!
   createdAt: DateTime!
   email: String!
+  activated: Boolean!
+  activationKey: String
   salt: String! @private
   password: String! @private
   name: String!
@@ -73,7 +77,7 @@ type Product {
   price_currency: String!
   priceFluctuates: Boolean
   billingType: BillingType
-  forServices: [String]!
+  forService: ServiceType!
   serviceRestrictions: Json
   requiresContact: Boolean!
 }
@@ -115,5 +119,6 @@ type OperationResponse {
 type AuthPayload {
   error: String
   token: String
+  isAdmin: Boolean
   user: User
 }

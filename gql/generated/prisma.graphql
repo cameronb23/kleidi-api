@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/cameron-b-4d8f44/kleidi/dev
-# timestamp: Mon Jan 28 2019 21:41:39 GMT-0500 (Eastern Standard Time)
+# timestamp: Tue Jan 29 2019 21:11:12 GMT-0500 (Eastern Standard Time)
 
 type AggregateBillingPlan {
   count: Int!
@@ -1297,6 +1297,7 @@ type PageInfo {
 }
 
 enum Permission {
+  SYSTEM_IS_ADMIN
   SYSTEM_MANAGE_ROLES
   SYSTEM_MANAGE_USERS
 }
@@ -1312,7 +1313,7 @@ type Product implements Node {
   price_currency: String!
   priceFluctuates: Boolean
   billingType: BillingType
-  forServices: [String!]!
+  forService: ServiceType
   serviceRestrictions: Json
   requiresContact: Boolean!
 }
@@ -1331,10 +1332,6 @@ input ProductCreatefeaturesInput {
   set: [String!]
 }
 
-input ProductCreateforServicesInput {
-  set: [String!]
-}
-
 input ProductCreateInput {
   title: String!
   active: Boolean
@@ -1343,10 +1340,10 @@ input ProductCreateInput {
   price_currency: String!
   priceFluctuates: Boolean
   billingType: BillingType
+  forService: ServiceType
   serviceRestrictions: Json
   requiresContact: Boolean
   features: ProductCreatefeaturesInput
-  forServices: ProductCreateforServicesInput
 }
 
 input ProductCreateManyInput {
@@ -1382,6 +1379,8 @@ enum ProductOrderByInput {
   priceFluctuates_DESC
   billingType_ASC
   billingType_DESC
+  forService_ASC
+  forService_DESC
   serviceRestrictions_ASC
   serviceRestrictions_DESC
   requiresContact_ASC
@@ -1401,7 +1400,7 @@ type ProductPreviousValues {
   price_currency: String!
   priceFluctuates: Boolean
   billingType: BillingType
-  forServices: [String!]!
+  forService: ServiceType
   serviceRestrictions: Json
   requiresContact: Boolean!
 }
@@ -1637,6 +1636,16 @@ input ProductScalarWhereInput {
 
   """All values that are not contained in given list."""
   billingType_not_in: [BillingType!]
+  forService: ServiceType
+
+  """All values that are not equal to given value."""
+  forService_not: ServiceType
+
+  """All values that are contained in given list."""
+  forService_in: [ServiceType!]
+
+  """All values that are not contained in given list."""
+  forService_not_in: [ServiceType!]
   requiresContact: Boolean
 
   """All values that are not equal to given value."""
@@ -1690,17 +1699,13 @@ input ProductUpdateDataInput {
   price_currency: String
   priceFluctuates: Boolean
   billingType: BillingType
+  forService: ServiceType
   serviceRestrictions: Json
   requiresContact: Boolean
   features: ProductUpdatefeaturesInput
-  forServices: ProductUpdateforServicesInput
 }
 
 input ProductUpdatefeaturesInput {
-  set: [String!]
-}
-
-input ProductUpdateforServicesInput {
   set: [String!]
 }
 
@@ -1712,10 +1717,10 @@ input ProductUpdateInput {
   price_currency: String
   priceFluctuates: Boolean
   billingType: BillingType
+  forService: ServiceType
   serviceRestrictions: Json
   requiresContact: Boolean
   features: ProductUpdatefeaturesInput
-  forServices: ProductUpdateforServicesInput
 }
 
 input ProductUpdateManyDataInput {
@@ -1726,10 +1731,10 @@ input ProductUpdateManyDataInput {
   price_currency: String
   priceFluctuates: Boolean
   billingType: BillingType
+  forService: ServiceType
   serviceRestrictions: Json
   requiresContact: Boolean
   features: ProductUpdatefeaturesInput
-  forServices: ProductUpdateforServicesInput
 }
 
 input ProductUpdateManyInput {
@@ -1752,10 +1757,10 @@ input ProductUpdateManyMutationInput {
   price_currency: String
   priceFluctuates: Boolean
   billingType: BillingType
+  forService: ServiceType
   serviceRestrictions: Json
   requiresContact: Boolean
   features: ProductUpdatefeaturesInput
-  forServices: ProductUpdateforServicesInput
 }
 
 input ProductUpdateManyWithWhereNestedInput {
@@ -2005,6 +2010,16 @@ input ProductWhereInput {
 
   """All values that are not contained in given list."""
   billingType_not_in: [BillingType!]
+  forService: ServiceType
+
+  """All values that are not equal to given value."""
+  forService_not: ServiceType
+
+  """All values that are contained in given list."""
+  forService_in: [ServiceType!]
+
+  """All values that are not contained in given list."""
+  forService_not_in: [ServiceType!]
   requiresContact: Boolean
 
   """All values that are not equal to given value."""
@@ -2432,6 +2447,10 @@ input RoleWhereUniqueInput {
   id: ID
 }
 
+enum ServiceType {
+  KEYBOT
+}
+
 type Subscription {
   billingPlan(where: BillingPlanSubscriptionWhereInput): BillingPlanSubscriptionPayload
   role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
@@ -2450,6 +2469,8 @@ type User implements Node {
   id: ID!
   createdAt: DateTime!
   email: String!
+  activated: Boolean!
+  activationKey: String
   salt: String!
   password: String!
   name: String!
@@ -2469,6 +2490,8 @@ type UserConnection {
 
 input UserCreateInput {
   email: String!
+  activated: Boolean
+  activationKey: String
   salt: String!
   password: String!
   name: String!
@@ -2493,6 +2516,8 @@ input UserCreateOneWithoutBillingPlansInput {
 
 input UserCreateWithoutBillingPlansInput {
   email: String!
+  activated: Boolean
+  activationKey: String
   salt: String!
   password: String!
   name: String!
@@ -2501,6 +2526,8 @@ input UserCreateWithoutBillingPlansInput {
 
 input UserCreateWithoutRolesInput {
   email: String!
+  activated: Boolean
+  activationKey: String
   salt: String!
   password: String!
   name: String!
@@ -2523,6 +2550,10 @@ enum UserOrderByInput {
   createdAt_DESC
   email_ASC
   email_DESC
+  activated_ASC
+  activated_DESC
+  activationKey_ASC
+  activationKey_DESC
   salt_ASC
   salt_DESC
   password_ASC
@@ -2537,6 +2568,8 @@ type UserPreviousValues {
   id: ID!
   createdAt: DateTime!
   email: String!
+  activated: Boolean!
+  activationKey: String
   salt: String!
   password: String!
   name: String!
@@ -2653,6 +2686,50 @@ input UserScalarWhereInput {
 
   """All values not ending with the given string."""
   email_not_ends_with: String
+  activated: Boolean
+
+  """All values that are not equal to given value."""
+  activated_not: Boolean
+  activationKey: String
+
+  """All values that are not equal to given value."""
+  activationKey_not: String
+
+  """All values that are contained in given list."""
+  activationKey_in: [String!]
+
+  """All values that are not contained in given list."""
+  activationKey_not_in: [String!]
+
+  """All values less than the given value."""
+  activationKey_lt: String
+
+  """All values less than or equal the given value."""
+  activationKey_lte: String
+
+  """All values greater than the given value."""
+  activationKey_gt: String
+
+  """All values greater than or equal the given value."""
+  activationKey_gte: String
+
+  """All values containing the given string."""
+  activationKey_contains: String
+
+  """All values not containing the given string."""
+  activationKey_not_contains: String
+
+  """All values starting with the given string."""
+  activationKey_starts_with: String
+
+  """All values not starting with the given string."""
+  activationKey_not_starts_with: String
+
+  """All values ending with the given string."""
+  activationKey_ends_with: String
+
+  """All values not ending with the given string."""
+  activationKey_not_ends_with: String
   salt: String
 
   """All values that are not equal to given value."""
@@ -2816,6 +2893,8 @@ input UserSubscriptionWhereInput {
 
 input UserUpdateDataInput {
   email: String
+  activated: Boolean
+  activationKey: String
   salt: String
   password: String
   name: String
@@ -2825,6 +2904,8 @@ input UserUpdateDataInput {
 
 input UserUpdateInput {
   email: String
+  activated: Boolean
+  activationKey: String
   salt: String
   password: String
   name: String
@@ -2834,6 +2915,8 @@ input UserUpdateInput {
 
 input UserUpdateManyDataInput {
   email: String
+  activated: Boolean
+  activationKey: String
   salt: String
   password: String
   name: String
@@ -2841,6 +2924,8 @@ input UserUpdateManyDataInput {
 
 input UserUpdateManyMutationInput {
   email: String
+  activated: Boolean
+  activationKey: String
   salt: String
   password: String
   name: String
@@ -2879,6 +2964,8 @@ input UserUpdateOneRequiredWithoutBillingPlansInput {
 
 input UserUpdateWithoutBillingPlansDataInput {
   email: String
+  activated: Boolean
+  activationKey: String
   salt: String
   password: String
   name: String
@@ -2887,6 +2974,8 @@ input UserUpdateWithoutBillingPlansDataInput {
 
 input UserUpdateWithoutRolesDataInput {
   email: String
+  activated: Boolean
+  activationKey: String
   salt: String
   password: String
   name: String
@@ -3025,6 +3114,50 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   email_not_ends_with: String
+  activated: Boolean
+
+  """All values that are not equal to given value."""
+  activated_not: Boolean
+  activationKey: String
+
+  """All values that are not equal to given value."""
+  activationKey_not: String
+
+  """All values that are contained in given list."""
+  activationKey_in: [String!]
+
+  """All values that are not contained in given list."""
+  activationKey_not_in: [String!]
+
+  """All values less than the given value."""
+  activationKey_lt: String
+
+  """All values less than or equal the given value."""
+  activationKey_lte: String
+
+  """All values greater than the given value."""
+  activationKey_gt: String
+
+  """All values greater than or equal the given value."""
+  activationKey_gte: String
+
+  """All values containing the given string."""
+  activationKey_contains: String
+
+  """All values not containing the given string."""
+  activationKey_not_contains: String
+
+  """All values starting with the given string."""
+  activationKey_starts_with: String
+
+  """All values not starting with the given string."""
+  activationKey_not_starts_with: String
+
+  """All values ending with the given string."""
+  activationKey_ends_with: String
+
+  """All values not ending with the given string."""
+  activationKey_not_ends_with: String
   salt: String
 
   """All values that are not equal to given value."""

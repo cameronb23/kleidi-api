@@ -8,7 +8,7 @@ export const getCurrentUser = async (db, req) => {
     const verifiedToken = jwt.verify(token, APP_SECRET);
 
     if (verifiedToken.userId) {
-      const user = await db.query.user({ where: { id: verifiedToken.userId } }, '{ id roles { permissions } }');
+      const user = await db.query.user({ where: { id: verifiedToken.userId } }, '{ id email activated roles { permissions } }');
       return user;
     }
   }

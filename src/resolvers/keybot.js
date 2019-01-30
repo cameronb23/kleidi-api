@@ -100,13 +100,20 @@ const Mutation = {
     // create object and start initialization
     // verify user has allowance to do so
     try {
-      const userQuery = await context.db.query.user({ where: { id: context.user.id } }, '{ billingPlans { associatedProducts { forServices serviceRestrictions } } }');
+      const userQuery = await context.db.query.user({ where: { id: context.user.id } }, '{ activated billingPlans { associatedProducts { forService serviceRestrictions } } }');
 
       if (userQuery == null) {
         throw new Error('user not found');
       }
 
-      const { billingPlans } = userQuery;
+      const { activated, billingPlans } = userQuery;
+
+      if (!activated) {
+        return {
+          status: 1,
+          error: 'Your account must be activated to create a service.'
+        };
+      }
 
       if (billingPlans.length === 0) {
         return {
@@ -127,7 +134,7 @@ const Mutation = {
       billingPlans.forEach((plan) => {
         plan.associatedProducts.forEach((product) => {
           let allowance;
-          if (product.forServices.includes('keybot')) {
+          if (product.forService === 'keybot') {
             allowance = product.serviceRestrictions.keybotMaxServices;
           }
           serviceAllowance += allowance;

@@ -1,4 +1,5 @@
 enum Permission {
+  SYSTEM_IS_ADMIN
   SYSTEM_MANAGE_ROLES
   SYSTEM_MANAGE_USERS
 }
@@ -28,10 +29,16 @@ enum BillingType {
   RECURRING
 }
 
+enum ServiceType {
+  KEYBOT
+}
+
 type User {
   id: ID! @unique
   createdAt: DateTime!
   email: String! @unique
+  activated: Boolean! @default(value: "false")
+  activationKey: String
   salt: String!
   password: String!
   name: String!
@@ -65,7 +72,7 @@ type Product {
   price_currency: String!
   priceFluctuates: Boolean @default(value: "false")
   billingType: BillingType
-  forServices: [String]!
+  forService: ServiceType
   serviceRestrictions: Json
   requiresContact: Boolean! @default(value: "false")
 }
