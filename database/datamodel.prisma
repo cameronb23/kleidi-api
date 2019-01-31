@@ -54,7 +54,7 @@ type UserBilling {
   defaultPaymentMethod: PaymentMethod @relation(name: "DefaultPaymentMethod", link: INLINE)
   paymentMethods: [PaymentMethod] @relation(name: "BillingPaymentMethods", link: INLINE)
   associatedPlans: [ProductPlan]! @relation(name: "UserBillingPlans", link: INLINE)
-  invoices: [Invoice]! @relation(name: "UserBillingInvoices", link: INLINE)
+  subscriptions: [Subscription]! @relation(name: "UserBillingSubscriptions", link: INLINE)
   forUser: User! @relation(name: "UserBilling")
 }
 
@@ -68,11 +68,11 @@ type PaymentMethod {
   lastFour: String!
 }
 
-type Invoice {
+type Subscription {
   id: ID! @id
   createdAt: DateTime! @createdAt
-  plansInvoiced: [ProductPlan]! @relation(name: "InvoicePlans", link: INLINE)
-  totalCharged: Float!
+  stripeSubscriptionId: String!
+  plan: ProductPlan! @relation(name: "SubscriptionPlan", link: INLINE)
 }
 
 type Role {

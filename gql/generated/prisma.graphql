@@ -1,9 +1,5 @@
 # source: http://192.168.99.100:4466
-# timestamp: Wed Jan 30 2019 21:45:14 GMT-0500 (Eastern Standard Time)
-
-type AggregateInvoice {
-  count: Int!
-}
+# timestamp: Wed Jan 30 2019 22:41:18 GMT-0500 (Eastern Standard Time)
 
 type AggregateKeybotCredentials {
   count: Int!
@@ -26,6 +22,10 @@ type AggregateProductPlan {
 }
 
 type AggregateRole {
+  count: Int!
+}
+
+type AggregateSubscription {
   count: Int!
 }
 
@@ -54,325 +54,6 @@ enum CloudProvider {
 }
 
 scalar DateTime
-
-type Invoice implements Node {
-  id: ID!
-  createdAt: DateTime!
-  plansInvoiced(where: ProductPlanWhereInput, orderBy: ProductPlanOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProductPlan!]
-  totalCharged: Float!
-}
-
-"""A connection to a list of items."""
-type InvoiceConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [InvoiceEdge]!
-  aggregate: AggregateInvoice!
-}
-
-input InvoiceCreateInput {
-  totalCharged: Float!
-  plansInvoiced: ProductPlanCreateManyInput
-}
-
-input InvoiceCreateManyInput {
-  create: [InvoiceCreateInput!]
-  connect: [InvoiceWhereUniqueInput!]
-}
-
-"""An edge in a connection."""
-type InvoiceEdge {
-  """The item at the end of the edge."""
-  node: Invoice!
-
-  """A cursor for use in pagination."""
-  cursor: String!
-}
-
-enum InvoiceOrderByInput {
-  id_ASC
-  id_DESC
-  createdAt_ASC
-  createdAt_DESC
-  totalCharged_ASC
-  totalCharged_DESC
-}
-
-type InvoicePreviousValues {
-  id: ID!
-  createdAt: DateTime!
-  totalCharged: Float!
-}
-
-input InvoiceScalarWhereInput {
-  """Logical AND on all given filters."""
-  AND: [InvoiceScalarWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [InvoiceScalarWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [InvoiceScalarWhereInput!]
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  createdAt: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
-  totalCharged: Float
-
-  """All values that are not equal to given value."""
-  totalCharged_not: Float
-
-  """All values that are contained in given list."""
-  totalCharged_in: [Float!]
-
-  """All values that are not contained in given list."""
-  totalCharged_not_in: [Float!]
-
-  """All values less than the given value."""
-  totalCharged_lt: Float
-
-  """All values less than or equal the given value."""
-  totalCharged_lte: Float
-
-  """All values greater than the given value."""
-  totalCharged_gt: Float
-
-  """All values greater than or equal the given value."""
-  totalCharged_gte: Float
-}
-
-type InvoiceSubscriptionPayload {
-  mutation: MutationType!
-  node: Invoice
-  updatedFields: [String!]
-  previousValues: InvoicePreviousValues
-}
-
-input InvoiceSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [InvoiceSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: InvoiceWhereInput
-}
-
-input InvoiceUpdateDataInput {
-  totalCharged: Float
-  plansInvoiced: ProductPlanUpdateManyInput
-}
-
-input InvoiceUpdateInput {
-  totalCharged: Float
-  plansInvoiced: ProductPlanUpdateManyInput
-}
-
-input InvoiceUpdateManyDataInput {
-  totalCharged: Float
-}
-
-input InvoiceUpdateManyInput {
-  create: [InvoiceCreateInput!]
-  connect: [InvoiceWhereUniqueInput!]
-  set: [InvoiceWhereUniqueInput!]
-  disconnect: [InvoiceWhereUniqueInput!]
-  delete: [InvoiceWhereUniqueInput!]
-  update: [InvoiceUpdateWithWhereUniqueNestedInput!]
-  updateMany: [InvoiceUpdateManyWithWhereNestedInput!]
-  deleteMany: [InvoiceScalarWhereInput!]
-  upsert: [InvoiceUpsertWithWhereUniqueNestedInput!]
-}
-
-input InvoiceUpdateManyMutationInput {
-  totalCharged: Float
-}
-
-input InvoiceUpdateManyWithWhereNestedInput {
-  where: InvoiceScalarWhereInput!
-  data: InvoiceUpdateManyDataInput!
-}
-
-input InvoiceUpdateWithWhereUniqueNestedInput {
-  where: InvoiceWhereUniqueInput!
-  data: InvoiceUpdateDataInput!
-}
-
-input InvoiceUpsertWithWhereUniqueNestedInput {
-  where: InvoiceWhereUniqueInput!
-  update: InvoiceUpdateDataInput!
-  create: InvoiceCreateInput!
-}
-
-input InvoiceWhereInput {
-  """Logical AND on all given filters."""
-  AND: [InvoiceWhereInput!]
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  createdAt: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
-  totalCharged: Float
-
-  """All values that are not equal to given value."""
-  totalCharged_not: Float
-
-  """All values that are contained in given list."""
-  totalCharged_in: [Float!]
-
-  """All values that are not contained in given list."""
-  totalCharged_not_in: [Float!]
-
-  """All values less than the given value."""
-  totalCharged_lt: Float
-
-  """All values less than or equal the given value."""
-  totalCharged_lte: Float
-
-  """All values greater than the given value."""
-  totalCharged_gt: Float
-
-  """All values greater than or equal the given value."""
-  totalCharged_gte: Float
-  plansInvoiced_some: ProductPlanWhereInput
-}
-
-input InvoiceWhereUniqueInput {
-  id: ID
-}
 
 """Raw JSON value"""
 scalar Json
@@ -444,49 +125,6 @@ enum KeybotCredentialsOrderByInput {
   discordToken_DESC
   encryptionKey_ASC
   encryptionKey_DESC
-}
-
-type KeybotCredentialsPreviousValues {
-  id: ID!
-  createdAt: DateTime!
-  production: Boolean
-  sessionSecret: String
-  mongoUrl: String
-  discordToken: String
-  encryptionKey: String
-}
-
-type KeybotCredentialsSubscriptionPayload {
-  mutation: MutationType!
-  node: KeybotCredentials
-  updatedFields: [String!]
-  previousValues: KeybotCredentialsPreviousValues
-}
-
-input KeybotCredentialsSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [KeybotCredentialsSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: KeybotCredentialsWhereInput
 }
 
 input KeybotCredentialsUpdateInput {
@@ -856,53 +494,6 @@ enum KeybotServiceOrderByInput {
   customFiles_DESC
 }
 
-type KeybotServicePreviousValues {
-  id: ID!
-  name: String!
-  createdAt: DateTime!
-  cloudProvider: CloudProvider!
-  cloudResourceId: String
-  currentOperation: OperationType
-  currentOperationStatus: String
-  currentVersion: String
-  lastDeploy: DateTime
-  updateType: UpdateMethod
-  customFiles: Json
-}
-
-type KeybotServiceSubscriptionPayload {
-  mutation: MutationType!
-  node: KeybotService
-  updatedFields: [String!]
-  previousValues: KeybotServicePreviousValues
-}
-
-input KeybotServiceSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [KeybotServiceSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: KeybotServiceWhereInput
-}
-
 input KeybotServiceUpdateInput {
   name: String
   cloudProvider: CloudProvider
@@ -1253,61 +844,55 @@ type Mutation {
   createProduct(data: ProductCreateInput!): Product!
   createKeybotService(data: KeybotServiceCreateInput!): KeybotService!
   createKeybotCredentials(data: KeybotCredentialsCreateInput!): KeybotCredentials!
+  createSubscription(data: SubscriptionCreateInput!): Subscription!
   createUser(data: UserCreateInput!): User!
   createProductPlan(data: ProductPlanCreateInput!): ProductPlan!
-  createInvoice(data: InvoiceCreateInput!): Invoice!
   createPaymentMethod(data: PaymentMethodCreateInput!): PaymentMethod!
   updateUserBilling(data: UserBillingUpdateInput!, where: UserBillingWhereUniqueInput!): UserBilling
   updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
   updateProduct(data: ProductUpdateInput!, where: ProductWhereUniqueInput!): Product
   updateKeybotService(data: KeybotServiceUpdateInput!, where: KeybotServiceWhereUniqueInput!): KeybotService
   updateKeybotCredentials(data: KeybotCredentialsUpdateInput!, where: KeybotCredentialsWhereUniqueInput!): KeybotCredentials
+  updateSubscription(data: SubscriptionUpdateInput!, where: SubscriptionWhereUniqueInput!): Subscription
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateProductPlan(data: ProductPlanUpdateInput!, where: ProductPlanWhereUniqueInput!): ProductPlan
-  updateInvoice(data: InvoiceUpdateInput!, where: InvoiceWhereUniqueInput!): Invoice
   updatePaymentMethod(data: PaymentMethodUpdateInput!, where: PaymentMethodWhereUniqueInput!): PaymentMethod
   deleteUserBilling(where: UserBillingWhereUniqueInput!): UserBilling
   deleteRole(where: RoleWhereUniqueInput!): Role
   deleteProduct(where: ProductWhereUniqueInput!): Product
   deleteKeybotService(where: KeybotServiceWhereUniqueInput!): KeybotService
   deleteKeybotCredentials(where: KeybotCredentialsWhereUniqueInput!): KeybotCredentials
+  deleteSubscription(where: SubscriptionWhereUniqueInput!): Subscription
   deleteUser(where: UserWhereUniqueInput!): User
   deleteProductPlan(where: ProductPlanWhereUniqueInput!): ProductPlan
-  deleteInvoice(where: InvoiceWhereUniqueInput!): Invoice
   deletePaymentMethod(where: PaymentMethodWhereUniqueInput!): PaymentMethod
   upsertUserBilling(where: UserBillingWhereUniqueInput!, create: UserBillingCreateInput!, update: UserBillingUpdateInput!): UserBilling!
   upsertRole(where: RoleWhereUniqueInput!, create: RoleCreateInput!, update: RoleUpdateInput!): Role!
   upsertProduct(where: ProductWhereUniqueInput!, create: ProductCreateInput!, update: ProductUpdateInput!): Product!
   upsertKeybotService(where: KeybotServiceWhereUniqueInput!, create: KeybotServiceCreateInput!, update: KeybotServiceUpdateInput!): KeybotService!
   upsertKeybotCredentials(where: KeybotCredentialsWhereUniqueInput!, create: KeybotCredentialsCreateInput!, update: KeybotCredentialsUpdateInput!): KeybotCredentials!
+  upsertSubscription(where: SubscriptionWhereUniqueInput!, create: SubscriptionCreateInput!, update: SubscriptionUpdateInput!): Subscription!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertProductPlan(where: ProductPlanWhereUniqueInput!, create: ProductPlanCreateInput!, update: ProductPlanUpdateInput!): ProductPlan!
-  upsertInvoice(where: InvoiceWhereUniqueInput!, create: InvoiceCreateInput!, update: InvoiceUpdateInput!): Invoice!
   upsertPaymentMethod(where: PaymentMethodWhereUniqueInput!, create: PaymentMethodCreateInput!, update: PaymentMethodUpdateInput!): PaymentMethod!
   updateManyUserBillings(data: UserBillingUpdateManyMutationInput!, where: UserBillingWhereInput): BatchPayload!
   updateManyRoles(data: RoleUpdateManyMutationInput!, where: RoleWhereInput): BatchPayload!
   updateManyProducts(data: ProductUpdateManyMutationInput!, where: ProductWhereInput): BatchPayload!
   updateManyKeybotServices(data: KeybotServiceUpdateManyMutationInput!, where: KeybotServiceWhereInput): BatchPayload!
   updateManyKeybotCredentialses(data: KeybotCredentialsUpdateManyMutationInput!, where: KeybotCredentialsWhereInput): BatchPayload!
+  updateManySubscriptions(data: SubscriptionUpdateManyMutationInput!, where: SubscriptionWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyProductPlans(data: ProductPlanUpdateManyMutationInput!, where: ProductPlanWhereInput): BatchPayload!
-  updateManyInvoices(data: InvoiceUpdateManyMutationInput!, where: InvoiceWhereInput): BatchPayload!
   updateManyPaymentMethods(data: PaymentMethodUpdateManyMutationInput!, where: PaymentMethodWhereInput): BatchPayload!
   deleteManyUserBillings(where: UserBillingWhereInput): BatchPayload!
   deleteManyRoles(where: RoleWhereInput): BatchPayload!
   deleteManyProducts(where: ProductWhereInput): BatchPayload!
   deleteManyKeybotServices(where: KeybotServiceWhereInput): BatchPayload!
   deleteManyKeybotCredentialses(where: KeybotCredentialsWhereInput): BatchPayload!
+  deleteManySubscriptions(where: SubscriptionWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyProductPlans(where: ProductPlanWhereInput): BatchPayload!
-  deleteManyInvoices(where: InvoiceWhereInput): BatchPayload!
   deleteManyPaymentMethods(where: PaymentMethodWhereInput): BatchPayload!
-}
-
-enum MutationType {
-  CREATED
-  UPDATED
-  DELETED
 }
 
 """An object with an ID"""
@@ -1403,16 +988,6 @@ enum PaymentMethodOrderByInput {
   expYear_DESC
   lastFour_ASC
   lastFour_DESC
-}
-
-type PaymentMethodPreviousValues {
-  id: ID!
-  createdAt: DateTime!
-  stripeSourceId: String!
-  cardBrand: String!
-  expMonth: Int!
-  expYear: Int!
-  lastFour: String!
 }
 
 input PaymentMethodScalarWhereInput {
@@ -1650,39 +1225,6 @@ input PaymentMethodScalarWhereInput {
 
   """All values not ending with the given string."""
   lastFour_not_ends_with: String
-}
-
-type PaymentMethodSubscriptionPayload {
-  mutation: MutationType!
-  node: PaymentMethod
-  updatedFields: [String!]
-  previousValues: PaymentMethodPreviousValues
-}
-
-input PaymentMethodSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [PaymentMethodSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: PaymentMethodWhereInput
 }
 
 input PaymentMethodUpdateDataInput {
@@ -2118,6 +1660,11 @@ input ProductPlanCreateManyWithoutProductInput {
   connect: [ProductPlanWhereUniqueInput!]
 }
 
+input ProductPlanCreateOneInput {
+  create: ProductPlanCreateInput
+  connect: ProductPlanWhereUniqueInput
+}
+
 input ProductPlanCreateWithoutProductInput {
   title: String!
   hidden: Boolean
@@ -2169,23 +1716,6 @@ enum ProductPlanOrderByInput {
   requiresContact_DESC
   stripePlanId_ASC
   stripePlanId_DESC
-}
-
-type ProductPlanPreviousValues {
-  id: ID!
-  createdAt: DateTime!
-  title: String!
-  hidden: Boolean!
-  active: Boolean!
-  description: String
-  features: [String!]!
-  price: Float!
-  price_currency: String!
-  priceFluctuates: Boolean!
-  billingType: BillingType
-  serviceEntitlements: Json
-  requiresContact: Boolean!
-  stripePlanId: String!
 }
 
 input ProductPlanScalarWhereInput {
@@ -2469,39 +1999,6 @@ input ProductPlanScalarWhereInput {
   stripePlanId_not_ends_with: String
 }
 
-type ProductPlanSubscriptionPayload {
-  mutation: MutationType!
-  node: ProductPlan
-  updatedFields: [String!]
-  previousValues: ProductPlanPreviousValues
-}
-
-input ProductPlanSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [ProductPlanSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: ProductPlanWhereInput
-}
-
 input ProductPlanUpdateDataInput {
   title: String
   hidden: Boolean
@@ -2597,6 +2094,13 @@ input ProductPlanUpdateManyWithWhereNestedInput {
   data: ProductPlanUpdateManyDataInput!
 }
 
+input ProductPlanUpdateOneRequiredInput {
+  create: ProductPlanCreateInput
+  connect: ProductPlanWhereUniqueInput
+  update: ProductPlanUpdateDataInput
+  upsert: ProductPlanUpsertNestedInput
+}
+
 input ProductPlanUpdateWithoutProductDataInput {
   title: String
   hidden: Boolean
@@ -2620,6 +2124,11 @@ input ProductPlanUpdateWithWhereUniqueNestedInput {
 input ProductPlanUpdateWithWhereUniqueWithoutProductInput {
   where: ProductPlanWhereUniqueInput!
   data: ProductPlanUpdateWithoutProductDataInput!
+}
+
+input ProductPlanUpsertNestedInput {
+  update: ProductPlanUpdateDataInput!
+  create: ProductPlanCreateInput!
 }
 
 input ProductPlanUpsertWithWhereUniqueNestedInput {
@@ -2914,47 +2423,6 @@ input ProductPlanWhereUniqueInput {
   id: ID
 }
 
-type ProductPreviousValues {
-  id: ID!
-  name: String!
-  createdAt: DateTime!
-  forService: ServiceType
-  stripeProductId: String!
-}
-
-type ProductSubscriptionPayload {
-  mutation: MutationType!
-  node: Product
-  updatedFields: [String!]
-  previousValues: ProductPreviousValues
-}
-
-input ProductSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [ProductSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: ProductWhereInput
-}
-
 input ProductUpdateInput {
   name: String
   forService: ServiceType
@@ -3154,27 +2622,27 @@ type Query {
   products(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Product]!
   keybotServices(where: KeybotServiceWhereInput, orderBy: KeybotServiceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [KeybotService]!
   keybotCredentialses(where: KeybotCredentialsWhereInput, orderBy: KeybotCredentialsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [KeybotCredentials]!
+  subscriptions(where: SubscriptionWhereInput, orderBy: SubscriptionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Subscription]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   productPlans(where: ProductPlanWhereInput, orderBy: ProductPlanOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProductPlan]!
-  invoices(where: InvoiceWhereInput, orderBy: InvoiceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Invoice]!
   paymentMethods(where: PaymentMethodWhereInput, orderBy: PaymentMethodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PaymentMethod]!
   userBilling(where: UserBillingWhereUniqueInput!): UserBilling
   role(where: RoleWhereUniqueInput!): Role
   product(where: ProductWhereUniqueInput!): Product
   keybotService(where: KeybotServiceWhereUniqueInput!): KeybotService
   keybotCredentials(where: KeybotCredentialsWhereUniqueInput!): KeybotCredentials
+  subscription(where: SubscriptionWhereUniqueInput!): Subscription
   user(where: UserWhereUniqueInput!): User
   productPlan(where: ProductPlanWhereUniqueInput!): ProductPlan
-  invoice(where: InvoiceWhereUniqueInput!): Invoice
   paymentMethod(where: PaymentMethodWhereUniqueInput!): PaymentMethod
   userBillingsConnection(where: UserBillingWhereInput, orderBy: UserBillingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserBillingConnection!
   rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
   productsConnection(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProductConnection!
   keybotServicesConnection(where: KeybotServiceWhereInput, orderBy: KeybotServiceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): KeybotServiceConnection!
   keybotCredentialsesConnection(where: KeybotCredentialsWhereInput, orderBy: KeybotCredentialsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): KeybotCredentialsConnection!
+  subscriptionsConnection(where: SubscriptionWhereInput, orderBy: SubscriptionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): SubscriptionConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   productPlansConnection(where: ProductPlanWhereInput, orderBy: ProductPlanOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProductPlanConnection!
-  invoicesConnection(where: InvoiceWhereInput, orderBy: InvoiceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): InvoiceConnection!
   paymentMethodsConnection(where: PaymentMethodWhereInput, orderBy: PaymentMethodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentMethodConnection!
 
   """Fetches an object given its ID"""
@@ -3238,13 +2706,6 @@ enum RoleOrderByInput {
   createdAt_DESC
   name_ASC
   name_DESC
-}
-
-type RolePreviousValues {
-  id: ID!
-  createdAt: DateTime!
-  permissions: [Permission!]!
-  name: String!
 }
 
 input RoleScalarWhereInput {
@@ -3358,39 +2819,6 @@ input RoleScalarWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
-}
-
-type RoleSubscriptionPayload {
-  mutation: MutationType!
-  node: Role
-  updatedFields: [String!]
-  previousValues: RolePreviousValues
-}
-
-input RoleSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [RoleSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: RoleWhereInput
 }
 
 input RoleUpdateInput {
@@ -3562,16 +2990,320 @@ enum ServiceType {
   KEYBOT
 }
 
-type Subscription {
-  userBilling(where: UserBillingSubscriptionWhereInput): UserBillingSubscriptionPayload
-  role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
-  product(where: ProductSubscriptionWhereInput): ProductSubscriptionPayload
-  keybotService(where: KeybotServiceSubscriptionWhereInput): KeybotServiceSubscriptionPayload
-  keybotCredentials(where: KeybotCredentialsSubscriptionWhereInput): KeybotCredentialsSubscriptionPayload
-  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
-  productPlan(where: ProductPlanSubscriptionWhereInput): ProductPlanSubscriptionPayload
-  invoice(where: InvoiceSubscriptionWhereInput): InvoiceSubscriptionPayload
-  paymentMethod(where: PaymentMethodSubscriptionWhereInput): PaymentMethodSubscriptionPayload
+type Subscription implements Node {
+  id: ID!
+  createdAt: DateTime!
+  stripeSubscriptionId: String!
+  plan: ProductPlan!
+}
+
+"""A connection to a list of items."""
+type SubscriptionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [SubscriptionEdge]!
+  aggregate: AggregateSubscription!
+}
+
+input SubscriptionCreateInput {
+  stripeSubscriptionId: String!
+  plan: ProductPlanCreateOneInput!
+}
+
+input SubscriptionCreateManyInput {
+  create: [SubscriptionCreateInput!]
+  connect: [SubscriptionWhereUniqueInput!]
+}
+
+"""An edge in a connection."""
+type SubscriptionEdge {
+  """The item at the end of the edge."""
+  node: Subscription!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum SubscriptionOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  stripeSubscriptionId_ASC
+  stripeSubscriptionId_DESC
+}
+
+input SubscriptionScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [SubscriptionScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [SubscriptionScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [SubscriptionScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  stripeSubscriptionId: String
+
+  """All values that are not equal to given value."""
+  stripeSubscriptionId_not: String
+
+  """All values that are contained in given list."""
+  stripeSubscriptionId_in: [String!]
+
+  """All values that are not contained in given list."""
+  stripeSubscriptionId_not_in: [String!]
+
+  """All values less than the given value."""
+  stripeSubscriptionId_lt: String
+
+  """All values less than or equal the given value."""
+  stripeSubscriptionId_lte: String
+
+  """All values greater than the given value."""
+  stripeSubscriptionId_gt: String
+
+  """All values greater than or equal the given value."""
+  stripeSubscriptionId_gte: String
+
+  """All values containing the given string."""
+  stripeSubscriptionId_contains: String
+
+  """All values not containing the given string."""
+  stripeSubscriptionId_not_contains: String
+
+  """All values starting with the given string."""
+  stripeSubscriptionId_starts_with: String
+
+  """All values not starting with the given string."""
+  stripeSubscriptionId_not_starts_with: String
+
+  """All values ending with the given string."""
+  stripeSubscriptionId_ends_with: String
+
+  """All values not ending with the given string."""
+  stripeSubscriptionId_not_ends_with: String
+}
+
+input SubscriptionUpdateDataInput {
+  stripeSubscriptionId: String
+  plan: ProductPlanUpdateOneRequiredInput
+}
+
+input SubscriptionUpdateInput {
+  stripeSubscriptionId: String
+  plan: ProductPlanUpdateOneRequiredInput
+}
+
+input SubscriptionUpdateManyDataInput {
+  stripeSubscriptionId: String
+}
+
+input SubscriptionUpdateManyInput {
+  create: [SubscriptionCreateInput!]
+  connect: [SubscriptionWhereUniqueInput!]
+  set: [SubscriptionWhereUniqueInput!]
+  disconnect: [SubscriptionWhereUniqueInput!]
+  delete: [SubscriptionWhereUniqueInput!]
+  update: [SubscriptionUpdateWithWhereUniqueNestedInput!]
+  updateMany: [SubscriptionUpdateManyWithWhereNestedInput!]
+  deleteMany: [SubscriptionScalarWhereInput!]
+  upsert: [SubscriptionUpsertWithWhereUniqueNestedInput!]
+}
+
+input SubscriptionUpdateManyMutationInput {
+  stripeSubscriptionId: String
+}
+
+input SubscriptionUpdateManyWithWhereNestedInput {
+  where: SubscriptionScalarWhereInput!
+  data: SubscriptionUpdateManyDataInput!
+}
+
+input SubscriptionUpdateWithWhereUniqueNestedInput {
+  where: SubscriptionWhereUniqueInput!
+  data: SubscriptionUpdateDataInput!
+}
+
+input SubscriptionUpsertWithWhereUniqueNestedInput {
+  where: SubscriptionWhereUniqueInput!
+  update: SubscriptionUpdateDataInput!
+  create: SubscriptionCreateInput!
+}
+
+input SubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [SubscriptionWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  stripeSubscriptionId: String
+
+  """All values that are not equal to given value."""
+  stripeSubscriptionId_not: String
+
+  """All values that are contained in given list."""
+  stripeSubscriptionId_in: [String!]
+
+  """All values that are not contained in given list."""
+  stripeSubscriptionId_not_in: [String!]
+
+  """All values less than the given value."""
+  stripeSubscriptionId_lt: String
+
+  """All values less than or equal the given value."""
+  stripeSubscriptionId_lte: String
+
+  """All values greater than the given value."""
+  stripeSubscriptionId_gt: String
+
+  """All values greater than or equal the given value."""
+  stripeSubscriptionId_gte: String
+
+  """All values containing the given string."""
+  stripeSubscriptionId_contains: String
+
+  """All values not containing the given string."""
+  stripeSubscriptionId_not_contains: String
+
+  """All values starting with the given string."""
+  stripeSubscriptionId_starts_with: String
+
+  """All values not starting with the given string."""
+  stripeSubscriptionId_not_starts_with: String
+
+  """All values ending with the given string."""
+  stripeSubscriptionId_ends_with: String
+
+  """All values not ending with the given string."""
+  stripeSubscriptionId_not_ends_with: String
+  plan: ProductPlanWhereInput
+}
+
+input SubscriptionWhereUniqueInput {
+  id: ID
 }
 
 enum UpdateMethod {
@@ -3599,7 +3331,7 @@ type UserBilling implements Node {
   defaultPaymentMethod: PaymentMethod
   paymentMethods(where: PaymentMethodWhereInput, orderBy: PaymentMethodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PaymentMethod!]
   associatedPlans(where: ProductPlanWhereInput, orderBy: ProductPlanOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProductPlan!]
-  invoices(where: InvoiceWhereInput, orderBy: InvoiceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Invoice!]
+  subscriptions(where: SubscriptionWhereInput, orderBy: SubscriptionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Subscription!]
   forUser: User!
 }
 
@@ -3618,7 +3350,7 @@ input UserBillingCreateInput {
   defaultPaymentMethod: PaymentMethodCreateOneInput
   paymentMethods: PaymentMethodCreateManyInput
   associatedPlans: ProductPlanCreateManyInput
-  invoices: InvoiceCreateManyInput
+  subscriptions: SubscriptionCreateManyInput
   forUser: UserCreateOneWithoutBillingInput!
 }
 
@@ -3632,7 +3364,7 @@ input UserBillingCreateWithoutForUserInput {
   defaultPaymentMethod: PaymentMethodCreateOneInput
   paymentMethods: PaymentMethodCreateManyInput
   associatedPlans: ProductPlanCreateManyInput
-  invoices: InvoiceCreateManyInput
+  subscriptions: SubscriptionCreateManyInput
 }
 
 """An edge in a connection."""
@@ -3653,51 +3385,12 @@ enum UserBillingOrderByInput {
   stripeCustomerId_DESC
 }
 
-type UserBillingPreviousValues {
-  id: ID!
-  createdAt: DateTime!
-  stripeCustomerId: String!
-}
-
-type UserBillingSubscriptionPayload {
-  mutation: MutationType!
-  node: UserBilling
-  updatedFields: [String!]
-  previousValues: UserBillingPreviousValues
-}
-
-input UserBillingSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [UserBillingSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: UserBillingWhereInput
-}
-
 input UserBillingUpdateInput {
   stripeCustomerId: String
   defaultPaymentMethod: PaymentMethodUpdateOneInput
   paymentMethods: PaymentMethodUpdateManyInput
   associatedPlans: ProductPlanUpdateManyInput
-  invoices: InvoiceUpdateManyInput
+  subscriptions: SubscriptionUpdateManyInput
   forUser: UserUpdateOneRequiredWithoutBillingInput
 }
 
@@ -3719,7 +3412,7 @@ input UserBillingUpdateWithoutForUserDataInput {
   defaultPaymentMethod: PaymentMethodUpdateOneInput
   paymentMethods: PaymentMethodUpdateManyInput
   associatedPlans: ProductPlanUpdateManyInput
-  invoices: InvoiceUpdateManyInput
+  subscriptions: SubscriptionUpdateManyInput
 }
 
 input UserBillingUpsertWithoutForUserInput {
@@ -3835,7 +3528,7 @@ input UserBillingWhereInput {
   defaultPaymentMethod: PaymentMethodWhereInput
   paymentMethods_some: PaymentMethodWhereInput
   associatedPlans_some: ProductPlanWhereInput
-  invoices_some: InvoiceWhereInput
+  subscriptions_some: SubscriptionWhereInput
   forUser: UserWhereInput
 }
 
@@ -3926,17 +3619,6 @@ enum UserOrderByInput {
   password_DESC
   name_ASC
   name_DESC
-}
-
-type UserPreviousValues {
-  id: ID!
-  createdAt: DateTime!
-  email: String!
-  activated: Boolean!
-  activationKey: String
-  salt: String!
-  password: String!
-  name: String!
 }
 
 input UserScalarWhereInput {
@@ -4214,39 +3896,6 @@ input UserScalarWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
-}
-
-type UserSubscriptionPayload {
-  mutation: MutationType!
-  node: User
-  updatedFields: [String!]
-  previousValues: UserPreviousValues
-}
-
-input UserSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [UserSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: UserWhereInput
 }
 
 input UserUpdateDataInput {

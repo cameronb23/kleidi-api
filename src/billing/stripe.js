@@ -50,6 +50,26 @@ export const attachSourceToCustomer = async (customerId, sourceId) => {
   }
 };
 
+export const subscribeUserToPlan = async (customerId, planId) => {
+  const params = {
+    customer: customerId,
+    items: [
+      {
+        plan: planId
+      }
+    ]
+  };
+
+  try {
+    const subscription = await stripe.subscriptions.create(params);
+
+    return subscription;
+  } catch (e) {
+    console.error('Error updating subscription: ', e);
+    return null;
+  }
+};
+
 export const createProduct = async (name) => {
   const params = {
     name,

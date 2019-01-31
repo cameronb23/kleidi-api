@@ -16,6 +16,7 @@ type Query {
   info: String!
   roles: [Role]! @isAuthenticated @hasPermissions(permissions: ["SYSTEM_MANAGE_ROLES"])
   currentUser: User! @isAuthenticated
+  paymentMethods: [PaymentMethod]! @isAuthenticated
   products: [Product]!
   product(productId: String!): Product!
   productPlan(planId: String!): ProductPlan!
@@ -36,6 +37,7 @@ type Mutation {
   verifyAccount(token: String!): OperationResponse! @isAuthenticated
   login(email: String!, password: String!): AuthPayload!
   addPaymentMethod(token: String!): OperationResponse! @isAuthenticated
+  subscribeToPlan(planId: String!): OperationResponse! @isAuthenticated
   
   createRole(name: String!, permissions: String): Role!
   updateRole(id: ID!, name: String, permissions: String): Role!
@@ -72,10 +74,11 @@ type UserBilling {
   id: ID!
   createdAt: DateTime!
   stripeCustomerId: String!
+  stripeSubscriptionId: String!
   defaultPaymentMethod: PaymentMethod
   paymentMethods: [PaymentMethod]
   associatedPlans: [ProductPlan]!
-  invoices: [Invoice]!
+  subscriptions: [Subscription]!
   forUser: User!
 }
 
@@ -88,11 +91,11 @@ type PaymentMethod {
   lastFour: String!
 }
 
-type Invoice {
+type Subscription {
   id: ID!
   createdAt: DateTime!
-  plansInvoiced: [ProductPlan]!
-  totalCharged: Float!
+  stripeSubscriptionId: String!
+  plan: ProductPlan!
 }
 
 type Product {
