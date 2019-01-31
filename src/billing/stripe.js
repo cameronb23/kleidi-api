@@ -21,6 +21,35 @@ export const createCustomer = async (email) => {
   }
 };
 
+export const createSource = async (token) => {
+  const params = {
+    type: 'card',
+    usage: 'reusable',
+    token
+  };
+
+  try {
+    const source = await stripe.sources.create(params);
+
+    return source;
+  } catch (e) {
+    console.error('Error creating payment method source: ', e);
+    return null;
+  }
+};
+
+export const attachSourceToCustomer = async (customerId, sourceId) => {
+  console.log('customer: ', customerId);
+  try {
+    const source = await stripe.customers.createSource(customerId, { source: sourceId });
+
+    return source;
+  } catch (e) {
+    console.error('Error adding source to customer: ', e);
+    return null;
+  }
+};
+
 export const createProduct = async (name) => {
   const params = {
     name,

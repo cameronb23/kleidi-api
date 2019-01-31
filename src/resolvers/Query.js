@@ -11,7 +11,7 @@ const products = async (parent, args, context, info) => context.db.query.product
 const productsForService = async (parent, args, context, info) => context.db.query.products({
   where: {
     forService: args.service,
-    plans_every: {
+    plans_some: {
       active: args.active
     }
   }

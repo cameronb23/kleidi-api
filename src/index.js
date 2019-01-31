@@ -22,6 +22,7 @@ import Mutation from './resolvers/Mutation';
 import Roles from './resolvers/roles';
 import ProductResolvers from './resolvers/products';
 import KeybotResolvers from './resolvers/keybot';
+import BillingResolvers from './resolvers/billing';
 import { setupCrypt } from './crypto';
 import { getCurrentUser } from './auth';
 import directiveResolvers from './directive-resolvers';
@@ -42,15 +43,22 @@ const serverOptions = {
 };
 
 const resolvers = {
-  Query: Object.assign({}, Query, Roles.Query, KeybotResolvers.Query, ProductResolvers.Query),
+  Query: Object.assign({},
+    Query, Roles.Query, KeybotResolvers.Query, ProductResolvers.Query, BillingResolvers.Query),
   Mutation: Object.assign(
-    {}, Mutation, Roles.Mutation, KeybotResolvers.Mutation, ProductResolvers.Mutation
+    {},
+    Mutation,
+    Roles.Mutation,
+    KeybotResolvers.Mutation,
+    ProductResolvers.Mutation,
+    BillingResolvers.Mutation
   )
 };
 
 const db = new Prisma({
   typeDefs: path.join(__dirname, '../gql/generated/prisma.graphql'),
-  endpoint: 'https://us1.prisma.sh/cameron-b-4d8f44/kleidi/dev',
+  // endpoint: 'https://us1.prisma.sh/cameron-b-4d8f44/kleidi/dev',
+  endpoint: 'http://192.168.99.100:4466',
   secret: 'mysecret123',
   // debug: true
 });

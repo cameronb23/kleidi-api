@@ -35,6 +35,7 @@ type Mutation {
   sendEmailActivation: OperationResponse! @isAuthenticated
   verifyAccount(token: String!): OperationResponse! @isAuthenticated
   login(email: String!, password: String!): AuthPayload!
+  addPaymentMethod(token: String!): OperationResponse! @isAuthenticated
   
   createRole(name: String!, permissions: String): Role!
   updateRole(id: ID!, name: String, permissions: String): Role!
@@ -84,7 +85,7 @@ type PaymentMethod {
   cardBrand: String!
   expMonth: Int!
   expYear: Int!
-  last4: Int!
+  lastFour: String!
 }
 
 type Invoice {

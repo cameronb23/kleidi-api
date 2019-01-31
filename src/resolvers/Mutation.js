@@ -198,7 +198,7 @@ const login = (parent, args, context) => new Promise(async (resolve, reject) => 
     return null;
   }
 
-  if (!user) throw new Error('Invalid email or password');
+  if (!user) return reject(new Error('Invalid email or password'));
 
   return async.waterfall([
     (callback) => {

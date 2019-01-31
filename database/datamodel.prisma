@@ -35,85 +35,86 @@ enum ServiceType {
 }
 
 type User {
-  id: ID! @unique
-  createdAt: DateTime!
+  id: ID! @id
+  createdAt: DateTime! @createdAt
   email: String! @unique
-  activated: Boolean! @default(value: "false")
+  activated: Boolean! @default(value: false)
   activationKey: String
   salt: String!
   password: String!
   name: String!
-  roles: [Role]! @relation(name: "UserRoles")
-  billing: UserBilling @relation(name: "UserBilling")
+  roles: [Role]! @relation(name: "UserRoles", link: INLINE)
+  billing: UserBilling @relation(name: "UserBilling" link: INLINE)
 }
 
 type UserBilling {
-  id: ID! @unique
-  createdAt: DateTime!
+  id: ID! @id
+  createdAt: DateTime! @createdAt
   stripeCustomerId: String! @unique
-  defaultPaymentMethod: PaymentMethod @relation(name: "DefaultPaymentMethod")
-  paymentMethods: [PaymentMethod] @relation(name: "BillingPaymentMethods")
-  associatedPlans: [ProductPlan]!
-  invoices: [Invoice]!
+  defaultPaymentMethod: PaymentMethod @relation(name: "DefaultPaymentMethod", link: INLINE)
+  paymentMethods: [PaymentMethod] @relation(name: "BillingPaymentMethods", link: INLINE)
+  associatedPlans: [ProductPlan]! @relation(name: "UserBillingPlans", link: INLINE)
+  invoices: [Invoice]! @relation(name: "UserBillingInvoices", link: INLINE)
   forUser: User! @relation(name: "UserBilling")
 }
 
 type PaymentMethod {
-  id: ID! @unique
+  id: ID! @id
+  createdAt: DateTime! @createdAt
   stripeSourceId: String! @unique
   cardBrand: String!
   expMonth: Int!
   expYear: Int!
-  last4: Int!
+  lastFour: String!
 }
 
 type Invoice {
-  id: ID! @unique
-  createdAt: DateTime!
-  plansInvoiced: [ProductPlan]!
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  plansInvoiced: [ProductPlan]! @relation(name: "InvoicePlans", link: INLINE)
   totalCharged: Float!
 }
 
 type Role {
-  id: ID! @unique
-  createdAt: DateTime!
+  id: ID! @id
+  createdAt: DateTime! @createdAt
   permissions: [Permission]
   name: String!
   attachedTo: [User] @relation(name: "UserRoles")
 }
 
 type Product {
-  id: ID! @unique
+  id: ID! @id
   name: String!
-  createdAt: DateTime!
+  createdAt: DateTime! @createdAt
   forService: ServiceType
-  plans: [ProductPlan] @relation(name: "ProductPlans")
+  plans: [ProductPlan] @relation(name: "ProductPlans", link: INLINE)
   stripeProductId: String!
 }
 
 type ProductPlan {
-  id: ID! @unique
-  createdAt: DateTime!
+  id: ID! @id
+  createdAt: DateTime! @createdAt
   title: String!
   product: Product! @relation(name: "ProductPlans")
-  hidden: Boolean! @default(value: "false")
-  active: Boolean! @default(value: "false")
+  hidden: Boolean! @default(value: false)
+  active: Boolean! @default(value: false)
   description: String
   features: [String]!
   price: Float!
   price_currency: String! @default(value: "USD")
-  priceFluctuates: Boolean! @default(value: "false")
+  priceFluctuates: Boolean! @default(value: false)
   billingType: BillingType
   serviceEntitlements: Json
-  requiresContact: Boolean! @default(value: "false")
+  requiresContact: Boolean! @default(value: false)
   stripePlanId: String!
 }
 
 type KeybotService {
-  id: ID! @unique
+  id: ID! @id
   name: String!
-  createdAt: DateTime!
-  owner: User!
+  createdAt: DateTime! @createdAt
+  owner: User! @relation(name: "KeybotServiceOwner", link: INLINE)
   cloudProvider: CloudProvider! @default(value: AWS)
   cloudResourceId: String
   currentOperation: OperationType
@@ -121,14 +122,14 @@ type KeybotService {
   currentVersion: String
   lastDeploy: DateTime
   updateType: UpdateMethod
-  credentials: KeybotCredentials @relation(name: "KeybotServiceCredentials")
+  credentials: KeybotCredentials @relation(name: "KeybotServiceCredentials", link: INLINE)
   customFiles: Json
 }
 
 type KeybotCredentials {
-  id: ID! @unique
+  id: ID! @id
+  createdAt: DateTime! @createdAt
   forService: KeybotService @relation(name: "KeybotServiceCredentials")
-  createdAt: DateTime!
   production: Boolean
   sessionSecret: String
   mongoUrl: String

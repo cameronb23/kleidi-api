@@ -1,5 +1,5 @@
-# source: https://us1.prisma.sh/cameron-b-4d8f44/kleidi/dev
-# timestamp: Wed Jan 30 2019 19:44:54 GMT-0500 (Eastern Standard Time)
+# source: http://192.168.99.100:4466
+# timestamp: Wed Jan 30 2019 21:45:14 GMT-0500 (Eastern Standard Time)
 
 type AggregateInvoice {
   count: Int!
@@ -98,8 +98,6 @@ enum InvoiceOrderByInput {
   createdAt_DESC
   totalCharged_ASC
   totalCharged_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type InvoicePreviousValues {
@@ -214,12 +212,6 @@ input InvoiceSubscriptionWhereInput {
   """Logical AND on all given filters."""
   AND: [InvoiceSubscriptionWhereInput!]
 
-  """Logical OR on all given filters."""
-  OR: [InvoiceSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [InvoiceSubscriptionWhereInput!]
-
   """
   The subscription event gets dispatched when it's listed in mutation_in
   """
@@ -291,12 +283,6 @@ input InvoiceUpsertWithWhereUniqueNestedInput {
 input InvoiceWhereInput {
   """Logical AND on all given filters."""
   AND: [InvoiceWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [InvoiceWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [InvoiceWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -381,9 +367,7 @@ input InvoiceWhereInput {
 
   """All values greater than or equal the given value."""
   totalCharged_gte: Float
-  plansInvoiced_every: ProductPlanWhereInput
   plansInvoiced_some: ProductPlanWhereInput
-  plansInvoiced_none: ProductPlanWhereInput
 }
 
 input InvoiceWhereUniqueInput {
@@ -395,8 +379,8 @@ scalar Json
 
 type KeybotCredentials implements Node {
   id: ID!
-  forService: KeybotService
   createdAt: DateTime!
+  forService: KeybotService
   production: Boolean
   sessionSecret: String
   mongoUrl: String
@@ -460,8 +444,6 @@ enum KeybotCredentialsOrderByInput {
   discordToken_DESC
   encryptionKey_ASC
   encryptionKey_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type KeybotCredentialsPreviousValues {
@@ -484,12 +466,6 @@ type KeybotCredentialsSubscriptionPayload {
 input KeybotCredentialsSubscriptionWhereInput {
   """Logical AND on all given filters."""
   AND: [KeybotCredentialsSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [KeybotCredentialsSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [KeybotCredentialsSubscriptionWhereInput!]
 
   """
   The subscription event gets dispatched when it's listed in mutation_in
@@ -555,12 +531,6 @@ input KeybotCredentialsUpsertWithoutForServiceInput {
 input KeybotCredentialsWhereInput {
   """Logical AND on all given filters."""
   AND: [KeybotCredentialsWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [KeybotCredentialsWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [KeybotCredentialsWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -884,8 +854,6 @@ enum KeybotServiceOrderByInput {
   updateType_DESC
   customFiles_ASC
   customFiles_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type KeybotServicePreviousValues {
@@ -912,12 +880,6 @@ type KeybotServiceSubscriptionPayload {
 input KeybotServiceSubscriptionWhereInput {
   """Logical AND on all given filters."""
   AND: [KeybotServiceSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [KeybotServiceSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [KeybotServiceSubscriptionWhereInput!]
 
   """
   The subscription event gets dispatched when it's listed in mutation_in
@@ -997,12 +959,6 @@ input KeybotServiceUpsertWithoutCredentialsInput {
 input KeybotServiceWhereInput {
   """Logical AND on all given filters."""
   AND: [KeybotServiceWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [KeybotServiceWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [KeybotServiceWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -1297,55 +1253,55 @@ type Mutation {
   createProduct(data: ProductCreateInput!): Product!
   createKeybotService(data: KeybotServiceCreateInput!): KeybotService!
   createKeybotCredentials(data: KeybotCredentialsCreateInput!): KeybotCredentials!
+  createUser(data: UserCreateInput!): User!
+  createProductPlan(data: ProductPlanCreateInput!): ProductPlan!
   createInvoice(data: InvoiceCreateInput!): Invoice!
   createPaymentMethod(data: PaymentMethodCreateInput!): PaymentMethod!
-  createProductPlan(data: ProductPlanCreateInput!): ProductPlan!
-  createUser(data: UserCreateInput!): User!
   updateUserBilling(data: UserBillingUpdateInput!, where: UserBillingWhereUniqueInput!): UserBilling
   updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
   updateProduct(data: ProductUpdateInput!, where: ProductWhereUniqueInput!): Product
   updateKeybotService(data: KeybotServiceUpdateInput!, where: KeybotServiceWhereUniqueInput!): KeybotService
   updateKeybotCredentials(data: KeybotCredentialsUpdateInput!, where: KeybotCredentialsWhereUniqueInput!): KeybotCredentials
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateProductPlan(data: ProductPlanUpdateInput!, where: ProductPlanWhereUniqueInput!): ProductPlan
   updateInvoice(data: InvoiceUpdateInput!, where: InvoiceWhereUniqueInput!): Invoice
   updatePaymentMethod(data: PaymentMethodUpdateInput!, where: PaymentMethodWhereUniqueInput!): PaymentMethod
-  updateProductPlan(data: ProductPlanUpdateInput!, where: ProductPlanWhereUniqueInput!): ProductPlan
-  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   deleteUserBilling(where: UserBillingWhereUniqueInput!): UserBilling
   deleteRole(where: RoleWhereUniqueInput!): Role
   deleteProduct(where: ProductWhereUniqueInput!): Product
   deleteKeybotService(where: KeybotServiceWhereUniqueInput!): KeybotService
   deleteKeybotCredentials(where: KeybotCredentialsWhereUniqueInput!): KeybotCredentials
+  deleteUser(where: UserWhereUniqueInput!): User
+  deleteProductPlan(where: ProductPlanWhereUniqueInput!): ProductPlan
   deleteInvoice(where: InvoiceWhereUniqueInput!): Invoice
   deletePaymentMethod(where: PaymentMethodWhereUniqueInput!): PaymentMethod
-  deleteProductPlan(where: ProductPlanWhereUniqueInput!): ProductPlan
-  deleteUser(where: UserWhereUniqueInput!): User
   upsertUserBilling(where: UserBillingWhereUniqueInput!, create: UserBillingCreateInput!, update: UserBillingUpdateInput!): UserBilling!
   upsertRole(where: RoleWhereUniqueInput!, create: RoleCreateInput!, update: RoleUpdateInput!): Role!
   upsertProduct(where: ProductWhereUniqueInput!, create: ProductCreateInput!, update: ProductUpdateInput!): Product!
   upsertKeybotService(where: KeybotServiceWhereUniqueInput!, create: KeybotServiceCreateInput!, update: KeybotServiceUpdateInput!): KeybotService!
   upsertKeybotCredentials(where: KeybotCredentialsWhereUniqueInput!, create: KeybotCredentialsCreateInput!, update: KeybotCredentialsUpdateInput!): KeybotCredentials!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  upsertProductPlan(where: ProductPlanWhereUniqueInput!, create: ProductPlanCreateInput!, update: ProductPlanUpdateInput!): ProductPlan!
   upsertInvoice(where: InvoiceWhereUniqueInput!, create: InvoiceCreateInput!, update: InvoiceUpdateInput!): Invoice!
   upsertPaymentMethod(where: PaymentMethodWhereUniqueInput!, create: PaymentMethodCreateInput!, update: PaymentMethodUpdateInput!): PaymentMethod!
-  upsertProductPlan(where: ProductPlanWhereUniqueInput!, create: ProductPlanCreateInput!, update: ProductPlanUpdateInput!): ProductPlan!
-  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   updateManyUserBillings(data: UserBillingUpdateManyMutationInput!, where: UserBillingWhereInput): BatchPayload!
   updateManyRoles(data: RoleUpdateManyMutationInput!, where: RoleWhereInput): BatchPayload!
   updateManyProducts(data: ProductUpdateManyMutationInput!, where: ProductWhereInput): BatchPayload!
   updateManyKeybotServices(data: KeybotServiceUpdateManyMutationInput!, where: KeybotServiceWhereInput): BatchPayload!
   updateManyKeybotCredentialses(data: KeybotCredentialsUpdateManyMutationInput!, where: KeybotCredentialsWhereInput): BatchPayload!
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  updateManyProductPlans(data: ProductPlanUpdateManyMutationInput!, where: ProductPlanWhereInput): BatchPayload!
   updateManyInvoices(data: InvoiceUpdateManyMutationInput!, where: InvoiceWhereInput): BatchPayload!
   updateManyPaymentMethods(data: PaymentMethodUpdateManyMutationInput!, where: PaymentMethodWhereInput): BatchPayload!
-  updateManyProductPlans(data: ProductPlanUpdateManyMutationInput!, where: ProductPlanWhereInput): BatchPayload!
-  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   deleteManyUserBillings(where: UserBillingWhereInput): BatchPayload!
   deleteManyRoles(where: RoleWhereInput): BatchPayload!
   deleteManyProducts(where: ProductWhereInput): BatchPayload!
   deleteManyKeybotServices(where: KeybotServiceWhereInput): BatchPayload!
   deleteManyKeybotCredentialses(where: KeybotCredentialsWhereInput): BatchPayload!
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
+  deleteManyProductPlans(where: ProductPlanWhereInput): BatchPayload!
   deleteManyInvoices(where: InvoiceWhereInput): BatchPayload!
   deleteManyPaymentMethods(where: PaymentMethodWhereInput): BatchPayload!
-  deleteManyProductPlans(where: ProductPlanWhereInput): BatchPayload!
-  deleteManyUsers(where: UserWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -1387,11 +1343,12 @@ type PageInfo {
 
 type PaymentMethod implements Node {
   id: ID!
+  createdAt: DateTime!
   stripeSourceId: String!
   cardBrand: String!
   expMonth: Int!
   expYear: Int!
-  last4: Int!
+  lastFour: String!
 }
 
 """A connection to a list of items."""
@@ -1409,7 +1366,7 @@ input PaymentMethodCreateInput {
   cardBrand: String!
   expMonth: Int!
   expYear: Int!
-  last4: Int!
+  lastFour: String!
 }
 
 input PaymentMethodCreateManyInput {
@@ -1434,6 +1391,8 @@ type PaymentMethodEdge {
 enum PaymentMethodOrderByInput {
   id_ASC
   id_DESC
+  createdAt_ASC
+  createdAt_DESC
   stripeSourceId_ASC
   stripeSourceId_DESC
   cardBrand_ASC
@@ -1442,21 +1401,18 @@ enum PaymentMethodOrderByInput {
   expMonth_DESC
   expYear_ASC
   expYear_DESC
-  last4_ASC
-  last4_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  createdAt_ASC
-  createdAt_DESC
+  lastFour_ASC
+  lastFour_DESC
 }
 
 type PaymentMethodPreviousValues {
   id: ID!
+  createdAt: DateTime!
   stripeSourceId: String!
   cardBrand: String!
   expMonth: Int!
   expYear: Int!
-  last4: Int!
+  lastFour: String!
 }
 
 input PaymentMethodScalarWhereInput {
@@ -1508,6 +1464,28 @@ input PaymentMethodScalarWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
   stripeSourceId: String
 
   """All values that are not equal to given value."""
@@ -1632,28 +1610,46 @@ input PaymentMethodScalarWhereInput {
 
   """All values greater than or equal the given value."""
   expYear_gte: Int
-  last4: Int
+  lastFour: String
 
   """All values that are not equal to given value."""
-  last4_not: Int
+  lastFour_not: String
 
   """All values that are contained in given list."""
-  last4_in: [Int!]
+  lastFour_in: [String!]
 
   """All values that are not contained in given list."""
-  last4_not_in: [Int!]
+  lastFour_not_in: [String!]
 
   """All values less than the given value."""
-  last4_lt: Int
+  lastFour_lt: String
 
   """All values less than or equal the given value."""
-  last4_lte: Int
+  lastFour_lte: String
 
   """All values greater than the given value."""
-  last4_gt: Int
+  lastFour_gt: String
 
   """All values greater than or equal the given value."""
-  last4_gte: Int
+  lastFour_gte: String
+
+  """All values containing the given string."""
+  lastFour_contains: String
+
+  """All values not containing the given string."""
+  lastFour_not_contains: String
+
+  """All values starting with the given string."""
+  lastFour_starts_with: String
+
+  """All values not starting with the given string."""
+  lastFour_not_starts_with: String
+
+  """All values ending with the given string."""
+  lastFour_ends_with: String
+
+  """All values not ending with the given string."""
+  lastFour_not_ends_with: String
 }
 
 type PaymentMethodSubscriptionPayload {
@@ -1666,12 +1662,6 @@ type PaymentMethodSubscriptionPayload {
 input PaymentMethodSubscriptionWhereInput {
   """Logical AND on all given filters."""
   AND: [PaymentMethodSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [PaymentMethodSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [PaymentMethodSubscriptionWhereInput!]
 
   """
   The subscription event gets dispatched when it's listed in mutation_in
@@ -1700,7 +1690,7 @@ input PaymentMethodUpdateDataInput {
   cardBrand: String
   expMonth: Int
   expYear: Int
-  last4: Int
+  lastFour: String
 }
 
 input PaymentMethodUpdateInput {
@@ -1708,7 +1698,7 @@ input PaymentMethodUpdateInput {
   cardBrand: String
   expMonth: Int
   expYear: Int
-  last4: Int
+  lastFour: String
 }
 
 input PaymentMethodUpdateManyDataInput {
@@ -1716,7 +1706,7 @@ input PaymentMethodUpdateManyDataInput {
   cardBrand: String
   expMonth: Int
   expYear: Int
-  last4: Int
+  lastFour: String
 }
 
 input PaymentMethodUpdateManyInput {
@@ -1736,7 +1726,7 @@ input PaymentMethodUpdateManyMutationInput {
   cardBrand: String
   expMonth: Int
   expYear: Int
-  last4: Int
+  lastFour: String
 }
 
 input PaymentMethodUpdateManyWithWhereNestedInput {
@@ -1772,12 +1762,6 @@ input PaymentMethodUpsertWithWhereUniqueNestedInput {
 input PaymentMethodWhereInput {
   """Logical AND on all given filters."""
   AND: [PaymentMethodWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [PaymentMethodWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [PaymentMethodWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -1818,6 +1802,28 @@ input PaymentMethodWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
   stripeSourceId: String
 
   """All values that are not equal to given value."""
@@ -1942,28 +1948,46 @@ input PaymentMethodWhereInput {
 
   """All values greater than or equal the given value."""
   expYear_gte: Int
-  last4: Int
+  lastFour: String
 
   """All values that are not equal to given value."""
-  last4_not: Int
+  lastFour_not: String
 
   """All values that are contained in given list."""
-  last4_in: [Int!]
+  lastFour_in: [String!]
 
   """All values that are not contained in given list."""
-  last4_not_in: [Int!]
+  lastFour_not_in: [String!]
 
   """All values less than the given value."""
-  last4_lt: Int
+  lastFour_lt: String
 
   """All values less than or equal the given value."""
-  last4_lte: Int
+  lastFour_lte: String
 
   """All values greater than the given value."""
-  last4_gt: Int
+  lastFour_gt: String
 
   """All values greater than or equal the given value."""
-  last4_gte: Int
+  lastFour_gte: String
+
+  """All values containing the given string."""
+  lastFour_contains: String
+
+  """All values not containing the given string."""
+  lastFour_not_contains: String
+
+  """All values starting with the given string."""
+  lastFour_starts_with: String
+
+  """All values not starting with the given string."""
+  lastFour_not_starts_with: String
+
+  """All values ending with the given string."""
+  lastFour_ends_with: String
+
+  """All values not ending with the given string."""
+  lastFour_not_ends_with: String
 }
 
 input PaymentMethodWhereUniqueInput {
@@ -2034,8 +2058,6 @@ enum ProductOrderByInput {
   forService_DESC
   stripeProductId_ASC
   stripeProductId_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type ProductPlan implements Node {
@@ -2147,8 +2169,6 @@ enum ProductPlanOrderByInput {
   requiresContact_DESC
   stripePlanId_ASC
   stripePlanId_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type ProductPlanPreviousValues {
@@ -2460,12 +2480,6 @@ input ProductPlanSubscriptionWhereInput {
   """Logical AND on all given filters."""
   AND: [ProductPlanSubscriptionWhereInput!]
 
-  """Logical OR on all given filters."""
-  OR: [ProductPlanSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [ProductPlanSubscriptionWhereInput!]
-
   """
   The subscription event gets dispatched when it's listed in mutation_in
   """
@@ -2623,12 +2637,6 @@ input ProductPlanUpsertWithWhereUniqueWithoutProductInput {
 input ProductPlanWhereInput {
   """Logical AND on all given filters."""
   AND: [ProductPlanWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [ProductPlanWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [ProductPlanWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -2925,12 +2933,6 @@ input ProductSubscriptionWhereInput {
   """Logical AND on all given filters."""
   AND: [ProductSubscriptionWhereInput!]
 
-  """Logical OR on all given filters."""
-  OR: [ProductSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [ProductSubscriptionWhereInput!]
-
   """
   The subscription event gets dispatched when it's listed in mutation_in
   """
@@ -2987,12 +2989,6 @@ input ProductUpsertWithoutPlansInput {
 input ProductWhereInput {
   """Logical AND on all given filters."""
   AND: [ProductWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [ProductWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [ProductWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -3145,9 +3141,7 @@ input ProductWhereInput {
 
   """All values not ending with the given string."""
   stripeProductId_not_ends_with: String
-  plans_every: ProductPlanWhereInput
   plans_some: ProductPlanWhereInput
-  plans_none: ProductPlanWhereInput
 }
 
 input ProductWhereUniqueInput {
@@ -3160,28 +3154,28 @@ type Query {
   products(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Product]!
   keybotServices(where: KeybotServiceWhereInput, orderBy: KeybotServiceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [KeybotService]!
   keybotCredentialses(where: KeybotCredentialsWhereInput, orderBy: KeybotCredentialsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [KeybotCredentials]!
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  productPlans(where: ProductPlanWhereInput, orderBy: ProductPlanOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProductPlan]!
   invoices(where: InvoiceWhereInput, orderBy: InvoiceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Invoice]!
   paymentMethods(where: PaymentMethodWhereInput, orderBy: PaymentMethodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PaymentMethod]!
-  productPlans(where: ProductPlanWhereInput, orderBy: ProductPlanOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProductPlan]!
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   userBilling(where: UserBillingWhereUniqueInput!): UserBilling
   role(where: RoleWhereUniqueInput!): Role
   product(where: ProductWhereUniqueInput!): Product
   keybotService(where: KeybotServiceWhereUniqueInput!): KeybotService
   keybotCredentials(where: KeybotCredentialsWhereUniqueInput!): KeybotCredentials
+  user(where: UserWhereUniqueInput!): User
+  productPlan(where: ProductPlanWhereUniqueInput!): ProductPlan
   invoice(where: InvoiceWhereUniqueInput!): Invoice
   paymentMethod(where: PaymentMethodWhereUniqueInput!): PaymentMethod
-  productPlan(where: ProductPlanWhereUniqueInput!): ProductPlan
-  user(where: UserWhereUniqueInput!): User
   userBillingsConnection(where: UserBillingWhereInput, orderBy: UserBillingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserBillingConnection!
   rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
   productsConnection(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProductConnection!
   keybotServicesConnection(where: KeybotServiceWhereInput, orderBy: KeybotServiceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): KeybotServiceConnection!
   keybotCredentialsesConnection(where: KeybotCredentialsWhereInput, orderBy: KeybotCredentialsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): KeybotCredentialsConnection!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  productPlansConnection(where: ProductPlanWhereInput, orderBy: ProductPlanOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProductPlanConnection!
   invoicesConnection(where: InvoiceWhereInput, orderBy: InvoiceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): InvoiceConnection!
   paymentMethodsConnection(where: PaymentMethodWhereInput, orderBy: PaymentMethodOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentMethodConnection!
-  productPlansConnection(where: ProductPlanWhereInput, orderBy: ProductPlanOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProductPlanConnection!
-  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -3244,8 +3238,6 @@ enum RoleOrderByInput {
   createdAt_DESC
   name_ASC
   name_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type RolePreviousValues {
@@ -3379,12 +3371,6 @@ input RoleSubscriptionWhereInput {
   """Logical AND on all given filters."""
   AND: [RoleSubscriptionWhereInput!]
 
-  """Logical OR on all given filters."""
-  OR: [RoleSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [RoleSubscriptionWhereInput!]
-
   """
   The subscription event gets dispatched when it's listed in mutation_in
   """
@@ -3463,12 +3449,6 @@ input RoleUpsertWithWhereUniqueWithoutAttachedToInput {
 input RoleWhereInput {
   """Logical AND on all given filters."""
   AND: [RoleWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [RoleWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [RoleWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -3571,9 +3551,7 @@ input RoleWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
-  attachedTo_every: UserWhereInput
   attachedTo_some: UserWhereInput
-  attachedTo_none: UserWhereInput
 }
 
 input RoleWhereUniqueInput {
@@ -3590,10 +3568,10 @@ type Subscription {
   product(where: ProductSubscriptionWhereInput): ProductSubscriptionPayload
   keybotService(where: KeybotServiceSubscriptionWhereInput): KeybotServiceSubscriptionPayload
   keybotCredentials(where: KeybotCredentialsSubscriptionWhereInput): KeybotCredentialsSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  productPlan(where: ProductPlanSubscriptionWhereInput): ProductPlanSubscriptionPayload
   invoice(where: InvoiceSubscriptionWhereInput): InvoiceSubscriptionPayload
   paymentMethod(where: PaymentMethodSubscriptionWhereInput): PaymentMethodSubscriptionPayload
-  productPlan(where: ProductPlanSubscriptionWhereInput): ProductPlanSubscriptionPayload
-  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
 enum UpdateMethod {
@@ -3673,8 +3651,6 @@ enum UserBillingOrderByInput {
   createdAt_DESC
   stripeCustomerId_ASC
   stripeCustomerId_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type UserBillingPreviousValues {
@@ -3693,12 +3669,6 @@ type UserBillingSubscriptionPayload {
 input UserBillingSubscriptionWhereInput {
   """Logical AND on all given filters."""
   AND: [UserBillingSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [UserBillingSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [UserBillingSubscriptionWhereInput!]
 
   """
   The subscription event gets dispatched when it's listed in mutation_in
@@ -3760,12 +3730,6 @@ input UserBillingUpsertWithoutForUserInput {
 input UserBillingWhereInput {
   """Logical AND on all given filters."""
   AND: [UserBillingWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [UserBillingWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [UserBillingWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -3869,15 +3833,9 @@ input UserBillingWhereInput {
   """All values not ending with the given string."""
   stripeCustomerId_not_ends_with: String
   defaultPaymentMethod: PaymentMethodWhereInput
-  paymentMethods_every: PaymentMethodWhereInput
   paymentMethods_some: PaymentMethodWhereInput
-  paymentMethods_none: PaymentMethodWhereInput
-  associatedPlans_every: ProductPlanWhereInput
   associatedPlans_some: ProductPlanWhereInput
-  associatedPlans_none: ProductPlanWhereInput
-  invoices_every: InvoiceWhereInput
   invoices_some: InvoiceWhereInput
-  invoices_none: InvoiceWhereInput
   forUser: UserWhereInput
 }
 
@@ -3968,8 +3926,6 @@ enum UserOrderByInput {
   password_DESC
   name_ASC
   name_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type UserPreviousValues {
@@ -4271,12 +4227,6 @@ input UserSubscriptionWhereInput {
   """Logical AND on all given filters."""
   AND: [UserSubscriptionWhereInput!]
 
-  """Logical OR on all given filters."""
-  OR: [UserSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [UserSubscriptionWhereInput!]
-
   """
   The subscription event gets dispatched when it's listed in mutation_in
   """
@@ -4414,12 +4364,6 @@ input UserUpsertWithWhereUniqueWithoutRolesInput {
 input UserWhereInput {
   """Logical AND on all given filters."""
   AND: [UserWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [UserWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [UserWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -4686,9 +4630,7 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
-  roles_every: RoleWhereInput
   roles_some: RoleWhereInput
-  roles_none: RoleWhereInput
   billing: UserBillingWhereInput
 }
 
