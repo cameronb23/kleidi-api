@@ -201,9 +201,9 @@ export const deleteOtherServices = async (service) => {
 
 export const updateService = async (service, clusterArn) => {
   const params = {
-    service: `${service.name}-${service.id}`,
+    service: `${service.id}`,
     cluster: clusterArn,
-    taskDefinition: `${service.name}-${service.id}`,
+    taskDefinition: `${service.id}`,
     forceNewDeployment: true
   };
 

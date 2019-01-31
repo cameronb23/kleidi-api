@@ -1,5 +1,5 @@
 export const generateTaskDefinition = (service, credentials) => ({
-  family: `${service.name}-${service.id}`,
+  family: `${service.id}`,
   cpu: '.5 vcpu', // CPU units to be used - https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_TaskDefinition.html
   memory: '1GB', // MB
   executionRoleArn: 'arn:aws:iam::758556097563:role/Kleidi-Deploy-ECS',
@@ -56,8 +56,8 @@ export const generateTaskDefinition = (service, credentials) => ({
 export const generateServiceOptions = (service, clusterArn) => ({
   cluster: clusterArn,
   desiredCount: 1,
-  serviceName: `${service.name}-${service.id}`,
-  taskDefinition: `${service.name}-${service.id}`,
+  serviceName: `${service.id}`,
+  taskDefinition: `${service.id}`,
   launchType: 'FARGATE',
   networkConfiguration: {
     awsvpcConfiguration: {
