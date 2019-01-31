@@ -32,12 +32,14 @@
     "nodemailer": "^5.1.1",
     "prisma-binding": "^2.2.14",
     "prisma-client-lib": "^1.24.0",
+    "stripe": "^6.22.0",
     "underscore": "^1.9.1",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/preset-env": "^7.3.0",
+    "@babel/preset-flow": "^7.0.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chai-http": "^4.2.1",
@@ -46,6 +48,7 @@
     "eslint": "^5.12.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
+    "flow-bin": "^0.91.0",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.9"
   }

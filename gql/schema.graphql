@@ -4,6 +4,7 @@ scalar DateTime
 scalar Json
 scalar Integer
 scalar Float
+scalar Int
 scalar Upload
 
 # directives
@@ -13,10 +14,13 @@ directive @hasPermissions(permissions: [String]) on QUERY | FIELD | FIELD_DEFINI
 
 type Query {
   info: String!
-  users: [User!]!
   roles: [Role]! @isAuthenticated @hasPermissions(permissions: ["SYSTEM_MANAGE_ROLES"])
+  currentUser: User! @isAuthenticated
   products: [Product]!
+  product(productId: String!): Product!
+  productPlan(planId: String!): ProductPlan!
   productsForService(service: ServiceType! active: Boolean): [Product]!
+  productPlans(productId: String!): [ProductPlan]!
 
   # keybot service queries
   ownedKeybotServices: [KeybotService]! @isAuthenticated
@@ -36,6 +40,10 @@ type Mutation {
   updateRole(id: ID!, name: String, permissions: String): Role!
   deleteRole(id: ID!): OperationResponse!
 
+  # admin mutations
+  createProduct(name: String!, forService: ServiceType!): OperationResponse! @isAuthenticated @hasPermissions(permissions: ["SYSTEM_IS_ADMIN"])
+  createProductPlan(productId: String!, title: String!, description: String!, price: Float!, billingType: BillingType!): OperationResponse! @isAuthenticated @hasPermissions(permissions: ["SYSTEM_IS_ADMIN"])
+
   # Keybot service mutations
   createKeybotService(name: String!, updateType: UpdateMethod!): OperationResponse! @isAuthenticated
   uploadCustomFile(file: Upload!, filePath: String!, fileType: String!, viewPath: String, serviceId: String!): OperationResponse! @isAuthenticated
@@ -52,34 +60,65 @@ type User {
   email: String!
   activated: Boolean!
   activationKey: String
-  salt: String! @private
-  password: String! @private
+  salt: String!
+  password: String!
   name: String!
-  roles: [Role]
-  billingPlans: [BillingPlan]
+  roles: [Role]!
+  billing: UserBilling
 }
 
-type BillingPlan {
+type UserBilling {
   id: ID!
   createdAt: DateTime!
-  associatedProducts: [Product]!
+  stripeCustomerId: String!
+  defaultPaymentMethod: PaymentMethod
+  paymentMethods: [PaymentMethod]
+  associatedPlans: [ProductPlan]!
+  invoices: [Invoice]!
   forUser: User!
+}
+
+type PaymentMethod {
+  id: ID!
+  stripeSourceId: String!
+  cardBrand: String!
+  expMonth: Int!
+  expYear: Int!
+  last4: Int!
+}
+
+type Invoice {
+  id: ID!
+  createdAt: DateTime!
+  plansInvoiced: [ProductPlan]!
+  totalCharged: Float!
 }
 
 type Product {
   id: ID!
-  createdAt: DateTime! @private
+  name: String!
+  createdAt: DateTime!
+  forService: ServiceType
+  plans: [ProductPlan]
+  stripeProductId: String! @isAuthenticated @hasPermissions(permissions: ["SYSTEM_IS_ADMIN"])
+}
+
+type ProductPlan {
+  id: ID!
+  createdAt: DateTime!
   title: String!
+  product: Product!
+  hidden: Boolean!
   active: Boolean!
   description: String
-  features: [String!]!
+  features: [String]!
   price: Float!
   price_currency: String!
-  priceFluctuates: Boolean
+  priceFluctuates: Boolean!
   billingType: BillingType
-  forService: ServiceType!
-  serviceRestrictions: Json
+  serviceEntitlements: Json
   requiresContact: Boolean!
+  stripePlanId: String!
 }
 
 type KeybotService {

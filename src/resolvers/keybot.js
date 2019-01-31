@@ -6,6 +6,7 @@ import {
   uploadCustomResource,
   deleteCustomResource
 } from '../cloud/keybot';
+import { getEntitlement } from '../billing/user';
 import { encryptData, decryptData } from '../crypto';
 
 const fieldNames = ['sessionSecret', 'mongoUrl', 'discordToken', 'encryptionKey'];
@@ -100,13 +101,13 @@ const Mutation = {
     // create object and start initialization
     // verify user has allowance to do so
     try {
-      const userQuery = await context.db.query.user({ where: { id: context.user.id } }, '{ activated billingPlans { associatedProducts { forService serviceRestrictions } } }');
+      const userQuery = await context.db.query.user({ where: { id: context.user.id } }, '{ activated billing { associatedPlans { serviceEntitlements } } }');
 
       if (userQuery == null) {
         throw new Error('user not found');
       }
 
-      const { activated, billingPlans } = userQuery;
+      const { activated } = userQuery;
 
       if (!activated) {
         return {
@@ -114,14 +115,6 @@ const Mutation = {
           error: 'Your account must be activated to create a service.'
         };
       }
-
-      if (billingPlans.length === 0) {
-        return {
-          status: 1,
-          error: 'Not enough allowance on current billing plan.'
-        };
-      }
-
       const serviceQuery = await context.db.query.keybotServices({
         where: {
           owner: { id: context.user.id }
@@ -130,18 +123,9 @@ const Mutation = {
 
       const currentServices = serviceQuery.length;
       // check their allowances via their billing plans
-      let serviceAllowance = 0;
-      billingPlans.forEach((plan) => {
-        plan.associatedProducts.forEach((product) => {
-          let allowance;
-          if (product.forService === 'keybot') {
-            allowance = product.serviceRestrictions.keybotMaxServices;
-          }
-          serviceAllowance += allowance;
-        });
-      });
+      const allowance = getEntitlement(userQuery, 'KEYBOT', 'maxServices');
 
-      if (currentServices >= serviceAllowance) {
+      if (!allowance || currentServices >= allowance) {
         return {
           status: 1,
           error: 'Not enough allowance on current billing plan.'
@@ -167,7 +151,11 @@ const Mutation = {
         message: 'Keybot service created successfully.'
       };
     } catch (e) {
-      throw e;
+      console.error(e);
+      return {
+        status: 1,
+        error: 'Unknown error creating service. Please try again later.'
+      };
     }
   },
   updateKeybotCredentials: async (parent, args, context, info) => {
@@ -188,8 +176,6 @@ const Mutation = {
       if (serviceQuery.owner.id !== context.user.id) {
         throw new Error('Unauthorized');
       }
-
-      console.log(data);
 
       let credentials;
       const encrypted = encryptFields(data);

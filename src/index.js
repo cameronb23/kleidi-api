@@ -12,6 +12,7 @@ import { Prisma } from 'prisma-binding';
 // import our permission middleware
 // import Permissions from './permissions';
 
+import { init as initStripe } from './billing/stripe';
 import { init as initMailer } from './email';
 
 // import resolvers
@@ -19,6 +20,7 @@ import Query from './resolvers/Query';
 import Mutation from './resolvers/Mutation';
 
 import Roles from './resolvers/roles';
+import ProductResolvers from './resolvers/products';
 import KeybotResolvers from './resolvers/keybot';
 import { setupCrypt } from './crypto';
 import { getCurrentUser } from './auth';
@@ -26,6 +28,7 @@ import directiveResolvers from './directive-resolvers';
 
 dotenv.config();
 
+initStripe(process.env.STRIPE_SECRET_KEY);
 setupCrypt(process.env.APP_SECRET);
 
 // const SCHEMA_PATH = path.join(__dirname, './schema.graphql');
@@ -39,8 +42,10 @@ const serverOptions = {
 };
 
 const resolvers = {
-  Query: Object.assign({}, Query, Roles.Query, KeybotResolvers.Query),
-  Mutation: Object.assign({}, Mutation, Roles.Mutation, KeybotResolvers.Mutation)
+  Query: Object.assign({}, Query, Roles.Query, KeybotResolvers.Query, ProductResolvers.Query),
+  Mutation: Object.assign(
+    {}, Mutation, Roles.Mutation, KeybotResolvers.Mutation, ProductResolvers.Mutation
+  )
 };
 
 const db = new Prisma({

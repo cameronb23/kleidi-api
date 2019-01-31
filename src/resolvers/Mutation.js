@@ -4,6 +4,7 @@ import async from 'async';
 import jwt from 'jsonwebtoken';
 import _ from 'underscore';
 
+import { createCustomer } from '../billing/stripe';
 import { generateVerificationToken, sendVerificationEmail } from '../accounts';
 
 const verifyAccount = async (parent, args, context) => {
@@ -94,7 +95,7 @@ const registerUser = (parent, args, context) => new Promise((resolve, reject) =>
       const existingUser = await context.db.query.user({ where: { email: args.email } });
 
       if (existingUser) {
-        return callback('User with that email already exists.');
+        return reject(new Error('User with that email already exists.'));
       }
 
       return callback(null);
@@ -103,7 +104,7 @@ const registerUser = (parent, args, context) => new Promise((resolve, reject) =>
     (callback) => {
       bcrypt.genSalt(10, (err, salt) => {
         if (err) {
-          return callback(`Error hashing password: ${err}`);
+          return reject(new Error('Error registering. Please try again later.'));
         }
 
         return callback(null, salt);
@@ -112,7 +113,7 @@ const registerUser = (parent, args, context) => new Promise((resolve, reject) =>
     (salt, callback) => {
       bcrypt.hash(args.password, salt, null, (err, hash) => {
         if (err) {
-          return callback(`Error hashing password: ${err}`);
+          return reject(new Error('Error registering. Please try again later.'));
         }
 
         return callback(null, salt, hash);
@@ -120,13 +121,19 @@ const registerUser = (parent, args, context) => new Promise((resolve, reject) =>
     },
     async (salt, hash, callback) => {
       try {
+        const stripeCustomer = await createCustomer(args.email);
         const user = await context.db.mutation.createUser({
           data: {
             ...args,
             salt,
             password: hash,
+            billing: {
+              create: {
+                stripeCustomerId: stripeCustomer.id
+              }
+            }
           }
-        }, '{ id name email roles { permissions }');
+        }, '{ id name email roles { permissions } }');
 
         return callback(null, user);
       } catch (e) {
@@ -158,7 +165,8 @@ const registerUser = (parent, args, context) => new Promise((resolve, reject) =>
   ], (err, user) => {
     if (err) {
       // generate error response
-      return reject(new Error(err));
+      console.error(err);
+      return reject(new Error('Error registering. Please try again later.'));
     }
 
     try {
