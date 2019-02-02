@@ -11,16 +11,4 @@ services:
         databases:
           default:
             connector: mongo
-            uri: mongodb://prisma:prisma@mongo
-  mongo:
-    image: mongo:3.6
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: prisma
-      MONGO_INITDB_ROOT_PASSWORD: prisma
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo:/var/lib/mongo
-volumes:
-  mongo:
+            uri: mongodb://api-dev:development123@keybot-dev-shard-00-00-2zead.mongodb.net:27017,keybot-dev-shard-00-01-2zead.mongodb.net:27017,keybot-dev-shard-00-02-2zead.mongodb.net:27017/test?ssl=true&replicaSet=Keybot-Dev-shard-0&authSource=admin&retryWrites=true
