@@ -27,8 +27,6 @@ const Query = {
       }
     }, '{ edges { node { subscriptions { id } } } }');
 
-    console.log(userBilling.edges[0].node);
-
     if (userBilling.edges.length < 1) {
       return [];
     }
