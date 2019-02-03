@@ -10,12 +10,12 @@ import _ from 'underscore';
  */
 export const getEntitlements = (user, service, entitlementKey) => {
   if (user.billing == null) {
-    return null;
+    return [];
   }
 
   const { subscriptions } = user.billing;
 
-  if (subscriptions.length < 1) return null;
+  if (subscriptions.length < 1) return [];
 
   const subscriptionsForService = _.filter(subscriptions,
     subscription => subscription.active
