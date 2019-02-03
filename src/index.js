@@ -1,5 +1,6 @@
 import '@babel/polyfill';
 
+import dotenv from 'dotenv';
 import path from 'path';
 import { GraphQLServer } from 'graphql-yoga';
 import { makeExecutableSchema } from 'graphql-tools';
@@ -7,11 +8,6 @@ import { importSchema } from 'graphql-import';
 
 // import the prisma client
 import { Prisma } from 'prisma-binding';
-
-if (process.env.NODE_ENV !== 'production') {
-  import dotenv from 'dotenv';
-  dotenv.config();
-}
 
 // import our permission middleware
 // import Permissions from './permissions';
@@ -30,6 +26,8 @@ import BillingResolvers from './resolvers/billing';
 import { setupCrypt } from './crypto';
 import { getCurrentUser } from './auth';
 import directiveResolvers from './directive-resolvers';
+
+dotenv.config();
 
 initStripe(process.env.STRIPE_SECRET_KEY);
 setupCrypt(process.env.APP_SECRET);
