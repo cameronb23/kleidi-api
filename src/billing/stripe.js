@@ -70,6 +70,21 @@ export const subscribeUserToPlan = async (customerId, planId) => {
   }
 };
 
+export const cancelUserSubscription = async (subscriptionId) => {
+  const params = {
+    cancel_at_period_end: true
+  };
+
+  try {
+    const sub = await stripe.subscriptions.update(subscriptionId, params);
+
+    return sub;
+  } catch (e) {
+    console.error('Error canceling subscription at period end: ', e);
+    return null;
+  }
+};
+
 export const createProduct = async (name) => {
   const params = {
     name,

@@ -1,5 +1,5 @@
 # source: http://192.168.99.100:4466
-# timestamp: Wed Jan 30 2019 22:41:18 GMT-0500 (Eastern Standard Time)
+# timestamp: Sat Feb 02 2019 23:26:46 GMT-0500 (Eastern Standard Time)
 
 type AggregateKeybotCredentials {
   count: Int!
@@ -2993,6 +2993,7 @@ enum ServiceType {
 type Subscription implements Node {
   id: ID!
   createdAt: DateTime!
+  active: Boolean!
   stripeSubscriptionId: String!
   plan: ProductPlan!
 }
@@ -3008,6 +3009,7 @@ type SubscriptionConnection {
 }
 
 input SubscriptionCreateInput {
+  active: Boolean
   stripeSubscriptionId: String!
   plan: ProductPlanCreateOneInput!
 }
@@ -3031,6 +3033,8 @@ enum SubscriptionOrderByInput {
   id_DESC
   createdAt_ASC
   createdAt_DESC
+  active_ASC
+  active_DESC
   stripeSubscriptionId_ASC
   stripeSubscriptionId_DESC
 }
@@ -3106,6 +3110,10 @@ input SubscriptionScalarWhereInput {
 
   """All values greater than or equal the given value."""
   createdAt_gte: DateTime
+  active: Boolean
+
+  """All values that are not equal to given value."""
+  active_not: Boolean
   stripeSubscriptionId: String
 
   """All values that are not equal to given value."""
@@ -3149,16 +3157,19 @@ input SubscriptionScalarWhereInput {
 }
 
 input SubscriptionUpdateDataInput {
+  active: Boolean
   stripeSubscriptionId: String
   plan: ProductPlanUpdateOneRequiredInput
 }
 
 input SubscriptionUpdateInput {
+  active: Boolean
   stripeSubscriptionId: String
   plan: ProductPlanUpdateOneRequiredInput
 }
 
 input SubscriptionUpdateManyDataInput {
+  active: Boolean
   stripeSubscriptionId: String
 }
 
@@ -3175,6 +3186,7 @@ input SubscriptionUpdateManyInput {
 }
 
 input SubscriptionUpdateManyMutationInput {
+  active: Boolean
   stripeSubscriptionId: String
 }
 
@@ -3259,6 +3271,10 @@ input SubscriptionWhereInput {
 
   """All values greater than or equal the given value."""
   createdAt_gte: DateTime
+  active: Boolean
+
+  """All values that are not equal to given value."""
+  active_not: Boolean
   stripeSubscriptionId: String
 
   """All values that are not equal to given value."""

@@ -1,5 +1,10 @@
 import _ from 'underscore';
-import { createSource, attachSourceToCustomer, subscribeUserToPlan } from '../billing/stripe';
+import {
+  createSource,
+  attachSourceToCustomer,
+  subscribeUserToPlan,
+  cancelUserSubscription
+} from '../billing/stripe';
 
 
 const Query = {
@@ -11,6 +16,38 @@ const Query = {
         id_in: ids
       }
     }, info);
+  },
+  subscriptions: async (parent, args, context, info) => {
+    // check if user actually owns that subscription
+    const userBilling = await context.db.query.userBillingsConnection({
+      where: {
+        forUser: {
+          id: context.user.id
+        }
+      }
+    }, '{ edges { node { subscriptions { id } } } }');
+
+    console.log(userBilling.edges[0].node);
+
+    if (userBilling.edges.length < 1) {
+      return [];
+    }
+
+    const billingNode = userBilling.edges[0].node;
+
+    if (billingNode.subscriptions == null || billingNode.subscriptions.length < 1) {
+      return [];
+    }
+
+    const ids = _.pluck(billingNode.subscriptions, 'id');
+
+    const subscriptions = await context.db.query.subscriptions({
+      where: {
+        id_in: ids
+      }
+    }, info);
+
+    return subscriptions;
   }
 };
 
@@ -78,16 +115,73 @@ const Mutation = {
       };
     }
   },
+  cancelSubscription: async (parent, args, context) => {
+    const { subscriptionId } = args;
+
+    // check if user actually owns that subscription
+    const userOwnsSubscription = await context.db.query.userBillings({
+      where: {
+        forUser: {
+          id: context.user.id
+        },
+        subscriptions_some: {
+          id: subscriptionId
+        }
+      }
+    });
+
+    console.log(userOwnsSubscription);
+
+    if (userOwnsSubscription.length < 1) {
+      return {
+        status: 1,
+        error: 'Invalid subscription for user'
+      };
+    }
+
+    const subscriptionRes = await context.db.query.subscription({ where: { id: subscriptionId } }, '{ id, stripeSubscriptionId }');
+
+    const { id, stripeSubscriptionId } = subscriptionRes;
+
+    const res = await cancelUserSubscription(stripeSubscriptionId);
+
+    if (res == null) {
+      return {
+        status: 1,
+        error: 'Error cancelling subscription. Please try again later. If issue persists, contact support.'
+      };
+    }
+
+    await context.db.mutation.updateSubscription({
+      where: { id },
+      data: {
+        active: false
+      }
+    });
+
+    return {
+      resourceId: id,
+      status: 0,
+      message: 'Subscription cancelled successfully.'
+    };
+  },
   subscribeToPlan: async (parent, args, context) => {
     const { planId } = args;
 
     const userBillingRes = await context.db.query.user({ where: { id: context.user.id } }, '{ billing { id stripeCustomerId defaultPaymentMethod { id stripeSourceId } paymentMethods { id stripeSourceId } } }');
-    const planRes = await context.db.query.productPlan({ where: { id: planId } }, '{ id stripePlanId }');
+    const planRes = await context.db.query.productPlan({ where: { id: planId } }, '{ id active stripePlanId }');
 
     if (!planRes) {
       return {
         status: 1,
         error: 'Invalid plan supplied.'
+      };
+    }
+
+    if (!planRes.active) {
+      return {
+        status: 1,
+        error: 'Plan is not active.'
       };
     }
 

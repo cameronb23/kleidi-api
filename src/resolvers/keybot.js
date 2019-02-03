@@ -6,7 +6,7 @@ import {
   uploadCustomResource,
   deleteCustomResource
 } from '../cloud/keybot';
-import { getEntitlement } from '../billing/user';
+import { getEntitlements } from '../billing/user';
 import { encryptData, decryptData } from '../crypto';
 
 const fieldNames = ['sessionSecret', 'mongoUrl', 'discordToken', 'encryptionKey'];
@@ -101,7 +101,7 @@ const Mutation = {
     // create object and start initialization
     // verify user has allowance to do so
     try {
-      const userQuery = await context.db.query.user({ where: { id: context.user.id } }, '{ activated billing { associatedPlans { serviceEntitlements } } }');
+      const userQuery = await context.db.query.user({ where: { id: context.user.id } }, '{ activated billing { subscriptions { active plan { serviceEntitlements product { forService } } } } }');
 
       if (userQuery == null) {
         throw new Error('user not found');
@@ -123,7 +123,12 @@ const Mutation = {
 
       const currentServices = serviceQuery.length;
       // check their allowances via their billing plans
-      const allowance = getEntitlement(userQuery, 'KEYBOT', 'maxServices');
+      const entitlementArray = getEntitlements(userQuery, 'KEYBOT', 'maxServices');
+      let allowance = 0;
+
+      if (entitlementArray.length > 0) {
+        allowance = entitlementArray.reduce((total, now) => total + now);
+      }
 
       if (!allowance || currentServices >= allowance) {
         return {

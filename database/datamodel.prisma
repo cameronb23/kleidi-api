@@ -71,6 +71,7 @@ type PaymentMethod {
 type Subscription {
   id: ID! @id
   createdAt: DateTime! @createdAt
+  active: Boolean! @default(value: true)
   stripeSubscriptionId: String!
   plan: ProductPlan! @relation(name: "SubscriptionPlan", link: INLINE)
 }

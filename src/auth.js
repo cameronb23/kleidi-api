@@ -5,11 +5,15 @@ export const getCurrentUser = async (db, req) => {
   const auth = req.request.get('Authorization');
   if (auth) {
     const token = auth.replace('Bearer ', '');
-    const verifiedToken = jwt.verify(token, APP_SECRET);
+    try {
+      const verifiedToken = jwt.verify(token, APP_SECRET, { maxAge: '2d' });
 
-    if (verifiedToken.userId) {
-      const user = await db.query.user({ where: { id: verifiedToken.userId } }, '{ id email activated roles { permissions } }');
-      return user;
+      if (verifiedToken.userId) {
+        const user = await db.query.user({ where: { id: verifiedToken.userId } }, '{ id email activated roles { permissions } }');
+        return user;
+      }
+    } catch (e) {
+      return null;
     }
   }
 
