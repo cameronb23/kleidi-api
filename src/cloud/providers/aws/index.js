@@ -97,7 +97,7 @@ export const createTaskDefinition = async (service, serviceCredentials) => {
 export const retrieveServiceStatus = async (service, clusterArn) => {
   const params = {
     cluster: clusterArn,
-    services: [`${service.name}-${service.id}`]
+    services: [`${service.id}`]
   };
 
   try {

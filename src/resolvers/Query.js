@@ -6,7 +6,7 @@ const currentUser = async (parent, args, context, info) => context.db.query.user
     id: context.user.id
   }
 }, info);
-const roles = async (parent, args, context) => context.db.query.roles();
+const roles = async (parent, args, context, info) => context.db.query.roles({}, info);
 const products = async (parent, args, context, info) => context.db.query.products({}, info);
 const productsForService = async (parent, args, context, info) => context.db.query.products({
   where: {
