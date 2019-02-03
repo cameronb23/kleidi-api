@@ -15,7 +15,7 @@ directive @hasPermissions(permissions: [String]) on QUERY | FIELD | FIELD_DEFINI
 type Query {
   info: String!
   roles: [Role]! @isAuthenticated @hasPermissions(permissions: ["SYSTEM_MANAGE_ROLES"])
-  currentUser: User! @isAuthenticated
+  currentUser: AuthPayload! @isAuthenticated
   paymentMethods: [PaymentMethod]! @isAuthenticated
   products: [Product]!
   product(productId: String!): Product!

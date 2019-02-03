@@ -171,7 +171,7 @@ const registerUser = (parent, args, context) => new Promise((resolve, reject) =>
 
     try {
       const { APP_SECRET } = process.env;
-      const token = jwt.sign({ userId: user.id }, APP_SECRET);
+      const token = jwt.sign({ userId: user.id }, APP_SECRET, { expiresIn: '2d' });
 
       const userTotalPermissions = _.flatten(_.pluck(user.roles, 'permissions'));
       const isAdmin = userTotalPermissions.includes('SYSTEM_IS_ADMIN');
@@ -223,7 +223,7 @@ const login = (parent, args, context) => new Promise(async (resolve, reject) => 
 
       try {
         const { APP_SECRET } = process.env;
-        const token = jwt.sign({ userId: user.id }, APP_SECRET);
+        const token = jwt.sign({ userId: user.id }, APP_SECRET, { expiresIn: '2d' });
 
         return callback(null, true, token);
       } catch (err) {
