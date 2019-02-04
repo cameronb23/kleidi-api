@@ -10,24 +10,29 @@ scalar Upload
 # directives
 directive @private on QUERY | FIELD | FIELD_DEFINITION | MUTATION
 directive @isAuthenticated on QUERY | FIELD | FIELD_DEFINITION | MUTATION
-directive @hasPermissions(permissions: [String]) on QUERY | FIELD | FIELD_DEFINITION | MUTATION
+directive @hasPermissions(
+  permissions: [String]
+) on QUERY | FIELD | FIELD_DEFINITION | MUTATION
 
 type Query {
   info: String!
-  roles: [Role]! @isAuthenticated @hasPermissions(permissions: ["SYSTEM_MANAGE_ROLES"])
+  roles: [Role]!
+    @isAuthenticated
+    @hasPermissions(permissions: ["SYSTEM_MANAGE_ROLES"])
   currentUser: AuthPayload! @isAuthenticated
   paymentMethods: [PaymentMethod]! @isAuthenticated
   subscriptions: [Subscription]! @isAuthenticated
   products: [Product]!
   product(productId: String!): Product!
   productPlan(planId: String!): ProductPlan!
-  productsForService(service: ServiceType! active: Boolean): [Product]!
+  productsForService(service: ServiceType!, active: Boolean): [Product]!
   productPlans(productId: String!): [ProductPlan]!
 
   # keybot service queries
   ownedKeybotServices: [KeybotService]! @isAuthenticated
   ownedKeybotService(serviceId: String!): [KeybotService]! @isAuthenticated
-  keybotServiceCredentials(serviceId: String!): [KeybotCredentials]! @isAuthenticated
+  keybotServiceCredentials(serviceId: String!): [KeybotCredentials]!
+    @isAuthenticated
   keybotCustomFiles(serviceId: String!): OperationResponse! @isAuthenticated
 }
 
@@ -37,26 +42,52 @@ type Mutation {
   sendEmailActivation: OperationResponse! @isAuthenticated
   verifyAccount(token: String!): OperationResponse! @isAuthenticated
   login(email: String!, password: String!): AuthPayload!
+  changePassword(
+    oldPassword: String!
+    newPassword: String!
+  ): OperationResponse! @isAuthenticated
   addPaymentMethod(token: String!): OperationResponse! @isAuthenticated
   subscribeToPlan(planId: String!): OperationResponse! @isAuthenticated
-  cancelSubscription(subscriptionId: String!): OperationResponse! @isAuthenticated
-  
+  cancelSubscription(subscriptionId: String!): OperationResponse!
+    @isAuthenticated
+
   createRole(name: String!, permissions: String): Role!
   updateRole(id: ID!, name: String, permissions: String): Role!
   deleteRole(id: ID!): OperationResponse!
 
   # admin mutations
-  createProduct(name: String!, forService: ServiceType!): OperationResponse! @isAuthenticated @hasPermissions(permissions: ["SYSTEM_IS_ADMIN"])
-  createProductPlan(productId: String!, title: String!, description: String!, price: Float!, billingType: BillingType!): OperationResponse! @isAuthenticated @hasPermissions(permissions: ["SYSTEM_IS_ADMIN"])
+  createProduct(name: String!, forService: ServiceType!): OperationResponse!
+    @isAuthenticated
+    @hasPermissions(permissions: ["SYSTEM_IS_ADMIN"])
+  createProductPlan(
+    productId: String!
+    title: String!
+    description: String!
+    price: Float!
+    billingType: BillingType!
+  ): OperationResponse!
+    @isAuthenticated
+    @hasPermissions(permissions: ["SYSTEM_IS_ADMIN"])
 
   # Keybot service mutations
-  createKeybotService(name: String!, updateType: UpdateMethod!): OperationResponse! @isAuthenticated
-  uploadCustomFile(file: Upload!, filePath: String!, fileType: String!, viewPath: String, serviceId: String!): OperationResponse! @isAuthenticated
-  deleteCustomFile(serviceId: String!, filePath: String!): OperationResponse! @isAuthenticated
+  createKeybotService(
+    name: String!
+    updateType: UpdateMethod!
+  ): OperationResponse! @isAuthenticated
+  uploadCustomFile(
+    file: Upload!
+    filePath: String!
+    fileType: String!
+    viewPath: String
+    serviceId: String!
+  ): OperationResponse! @isAuthenticated
+  deleteCustomFile(serviceId: String!, filePath: String!): OperationResponse!
+    @isAuthenticated
   deployService(id: String!): OperationResponse! @isAuthenticated
 
   # updateKeybotCredentials(serviceId: String!, production: Boolean!, sessionSecret: String!, mongoUrl: String!, discordToken: String!, encryptionKey: String!): KeybotCredentials! @isAuthenticated
-  updateKeybotCredentials(serviceId: String!, data: Json!): OperationResponse! @isAuthenticated
+  updateKeybotCredentials(serviceId: String!, data: Json!): OperationResponse!
+    @isAuthenticated
 }
 
 type User {
@@ -97,7 +128,8 @@ type Subscription {
   id: ID!
   createdAt: DateTime!
   active: Boolean!
-  stripeSubscriptionId: String! @hasPermissions(permissions: ["SYSTEM_IS_ADMIN"])
+  stripeSubscriptionId: String!
+    @hasPermissions(permissions: ["SYSTEM_IS_ADMIN"])
   plan: ProductPlan!
 }
 
@@ -107,7 +139,9 @@ type Product {
   createdAt: DateTime!
   forService: ServiceType
   plans: [ProductPlan]
-  stripeProductId: String! @isAuthenticated @hasPermissions(permissions: ["SYSTEM_IS_ADMIN"])
+  stripeProductId: String!
+    @isAuthenticated
+    @hasPermissions(permissions: ["SYSTEM_IS_ADMIN"])
 }
 
 type ProductPlan {
