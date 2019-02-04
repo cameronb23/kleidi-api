@@ -22,9 +22,7 @@ export const getClusters = async () => {
   }
 };
 
-/**
- * Retrieves all clusters on the AWS cloud (up to 50)
- */
+
 export const getTagsForObject = async (bucket, objectKey) => {
   const params = {
     Bucket: bucket,
@@ -39,7 +37,7 @@ export const getTagsForObject = async (bucket, objectKey) => {
 
     return null;
   } catch (e) {
-    throw new Error('Error attempting to fetch clusters from AWS.');
+    throw new Error('Error attempting to fetch tags from AWS.');
   }
 };
 
@@ -81,8 +79,8 @@ export const createNewCluster = async (serviceId, serviceName, serviceOwnerId) =
  * @param {String} serviceId the ID of the service in Kleidi DB
  * @param {String} serviceName the name of the service
  */
-export const createTaskDefinition = async (service, serviceCredentials) => {
-  const params = generateTaskDefinition(service, serviceCredentials);
+export const createTaskDefinition = async (service, serviceCredentials, accessKey) => {
+  const params = generateTaskDefinition(service, serviceCredentials, accessKey);
 
   try {
     const res = await ECS.registerTaskDefinition(params).promise();
@@ -203,7 +201,7 @@ export const updateService = async (service, clusterArn) => {
   const params = {
     service: `${service.id}`,
     cluster: clusterArn,
-    taskDefinition: `${service.id}`,
+    taskDefinition: `keybot-${service.id}`,
     forceNewDeployment: true
   };
 
