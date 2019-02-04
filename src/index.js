@@ -23,6 +23,7 @@ import Roles from './resolvers/roles';
 import ProductResolvers from './resolvers/products';
 import KeybotResolvers from './resolvers/keybot';
 import BillingResolvers from './resolvers/billing';
+import AccountResolvers from './resolvers/account';
 import { setupCrypt } from './crypto';
 import { getCurrentUser } from './auth';
 import directiveResolvers from './directive-resolvers';
@@ -44,11 +45,18 @@ const serverOptions = {
 
 const resolvers = {
   Query: Object.assign({},
-    Query, Roles.Query, KeybotResolvers.Query, ProductResolvers.Query, BillingResolvers.Query),
+    Query,
+    Roles.Query,
+    AccountResolvers.Query,
+    KeybotResolvers.Query,
+    ProductResolvers.Query,
+    BillingResolvers.Query
+  ),
   Mutation: Object.assign(
     {},
     Mutation,
     Roles.Mutation,
+    AccountResolvers.Mutation,
     KeybotResolvers.Mutation,
     ProductResolvers.Mutation,
     BillingResolvers.Mutation

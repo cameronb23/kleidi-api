@@ -52,7 +52,7 @@ const Mutation = {
           return callback(null, true, hash);
         });
       },
-      (wasSuccessful, hash, callback) => {
+      async (wasSuccessful, hash, callback) => {
         if (!wasSuccessful) {
           return callback(null, false);
         }
