@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import async from 'async';
 import bcrypt from 'bcrypt-nodejs';
 
 const Query = {};
