@@ -45,7 +45,7 @@ const Mutation = {
         }
 
         // hash new password
-        bcrypt.hash(args.password, user.salt, null, (err, hash) => {
+        bcrypt.hash(newPassword, user.salt, null, (err, hash) => {
           if (err) {
             return callback(err);
           }
