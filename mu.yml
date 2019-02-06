@@ -1,0 +1,10 @@
+environments:
+  - name: acceptance
+  - name: production
+service:
+  name: api
+  port: 80
+  healthEndpoint: /v1/graphql
+  pathPatterns:
+    - /*
+  pipeline:
