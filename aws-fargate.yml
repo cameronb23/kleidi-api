@@ -27,6 +27,13 @@ Parameters:
       - 1.8.3
       - 1.7.4
 
+  VpcId:
+    Type: String
+    Description: The ID of an existing VPC to use
+  Subnets:
+    Type: CommaDelimitedList
+    Description: The list of IDs of subnets for at least two Availability Zones in the region of the VPC above
+
   DbHost:
     Type: String
 
@@ -95,12 +102,15 @@ Resources:
   # It has two public subnets
   # We distribute the subnets across the first two available subnets
   # for the region, for high availability.
-  VPC:
-    Type: AWS::EC2::VPC
-    Properties:
-      EnableDnsSupport: true
-      EnableDnsHostnames: true
-      CidrBlock: !FindInMap ["SubnetConfig", "VPC", "CIDR"]
+
+  #  DONT CREATE THA SHIT
+
+  # VPC:
+  #   Type: AWS::EC2::VPC
+  #   Properties:
+  #     EnableDnsSupport: true
+  #     EnableDnsHostnames: true
+  #     CidrBlock: !FindInMap ["SubnetConfig", "VPC", "CIDR"]
 
   # Two public subnets, where containers can have public IP addresses
   PublicSubnetOne:
@@ -110,7 +120,7 @@ Resources:
         Fn::Select:
           - 0
           - Fn::GetAZs: { Ref: "AWS::Region" }
-      VpcId: !Ref "VPC"
+      VpcId: !Ref "VpcId"
       CidrBlock: !FindInMap ["SubnetConfig", "PublicOne", "CIDR"]
       MapPublicIpOnLaunch: true
 
@@ -121,7 +131,7 @@ Resources:
         Fn::Select:
           - 1
           - Fn::GetAZs: { Ref: "AWS::Region" }
-      VpcId: !Ref "VPC"
+      VpcId: !Ref "VpcId"
       CidrBlock: !FindInMap ["SubnetConfig", "PublicTwo", "CIDR"]
       MapPublicIpOnLaunch: true
 
@@ -134,13 +144,13 @@ Resources:
   GatewayAttachement:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
-      VpcId: !Ref "VPC"
+      VpcId: !Ref "VpcId"
       InternetGatewayId: !Ref "InternetGateway"
 
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref "VPC"
+      VpcId: !Ref "VpcId"
 
   PublicRoute:
     Type: AWS::EC2::Route
@@ -170,7 +180,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Access to the Fargate containers
-      VpcId: !Ref "VPC"
+      VpcId: !Ref "VpcId"
 
   EcsSecurityGroupIngressFromPublicALB:
     Type: AWS::EC2::SecurityGroupIngress
@@ -192,7 +202,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Access to the public facing load balancer
-      VpcId: !Ref "VPC"
+      VpcId: !Ref "VpcId"
       SecurityGroupIngress:
         - CidrIp: 0.0.0.0/0
           IpProtocol: -1
@@ -221,7 +231,7 @@ Resources:
       Port: 80
       Protocol: HTTP
       UnhealthyThresholdCount: 2
-      VpcId: !Ref "VPC"
+      VpcId: !Ref "VpcId"
       TargetType: "ip"
 
   PublicLoadBalancerListener:
@@ -417,9 +427,9 @@ Outputs:
 
   VPCId:
     Description: The ID of the VPC that this stack is deployed in
-    Value: !Ref "VPC"
+    Value: !Ref "VpcId"
     Export:
-      Name: !Join [":", [!Ref "AWS::StackName", "VPCId"]]
+      Name: !Join [":", [!Ref "AWS::StackName", "VpcId"]]
 
   PublicSubnetOne:
     Description: Public subnet one

@@ -1,10 +1,19 @@
+namespace: kleidi
 environments:
   - name: acceptance
+    provider: ecs-fargate
+    loadbalancer:
+      certificate: d2452c09-605d-4bee-8042-825d3e8e03c4
   - name: production
+    provider: ecs-fargate
+    loadbalancer:
+      certificate: d2452c09-605d-4bee-8042-825d3e8e03c4
 service:
-  name: api
-  port: 80
-  healthEndpoint: /v1/graphql
+  name: api-backend
+  desiredCount: 1
+  maxSize: 3
+  memory: 1000
+  port: 3000
   pathPatterns:
     - /*
-  pipeline:
+  discoveryTTL: 5
