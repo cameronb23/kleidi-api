@@ -1,5 +1,5 @@
-# source: http://192.168.99.100:4466
-# timestamp: Sat Feb 02 2019 23:26:46 GMT-0500 (Eastern Standard Time)
+# source: http://kleid-publi-zci5hvz5wg8b-1604481775.us-east-1.elb.amazonaws.com
+# timestamp: Sun Feb 03 2019 21:27:09 GMT-0500 (Eastern Standard Time)
 
 type AggregateKeybotCredentials {
   count: Int!
@@ -408,6 +408,7 @@ type KeybotService implements Node {
   createdAt: DateTime!
   owner: User!
   cloudProvider: CloudProvider!
+  cloudAccessKey: String
   cloudResourceId: String
   currentOperation: OperationType
   currentOperationStatus: String
@@ -431,6 +432,7 @@ type KeybotServiceConnection {
 input KeybotServiceCreateInput {
   name: String!
   cloudProvider: CloudProvider
+  cloudAccessKey: String
   cloudResourceId: String
   currentOperation: OperationType
   currentOperationStatus: String
@@ -450,6 +452,7 @@ input KeybotServiceCreateOneWithoutCredentialsInput {
 input KeybotServiceCreateWithoutCredentialsInput {
   name: String!
   cloudProvider: CloudProvider
+  cloudAccessKey: String
   cloudResourceId: String
   currentOperation: OperationType
   currentOperationStatus: String
@@ -478,6 +481,8 @@ enum KeybotServiceOrderByInput {
   createdAt_DESC
   cloudProvider_ASC
   cloudProvider_DESC
+  cloudAccessKey_ASC
+  cloudAccessKey_DESC
   cloudResourceId_ASC
   cloudResourceId_DESC
   currentOperation_ASC
@@ -497,6 +502,7 @@ enum KeybotServiceOrderByInput {
 input KeybotServiceUpdateInput {
   name: String
   cloudProvider: CloudProvider
+  cloudAccessKey: String
   cloudResourceId: String
   currentOperation: OperationType
   currentOperationStatus: String
@@ -511,6 +517,7 @@ input KeybotServiceUpdateInput {
 input KeybotServiceUpdateManyMutationInput {
   name: String
   cloudProvider: CloudProvider
+  cloudAccessKey: String
   cloudResourceId: String
   currentOperation: OperationType
   currentOperationStatus: String
@@ -532,6 +539,7 @@ input KeybotServiceUpdateOneWithoutCredentialsInput {
 input KeybotServiceUpdateWithoutCredentialsDataInput {
   name: String
   cloudProvider: CloudProvider
+  cloudAccessKey: String
   cloudResourceId: String
   currentOperation: OperationType
   currentOperationStatus: String
@@ -662,6 +670,46 @@ input KeybotServiceWhereInput {
 
   """All values that are not contained in given list."""
   cloudProvider_not_in: [CloudProvider!]
+  cloudAccessKey: String
+
+  """All values that are not equal to given value."""
+  cloudAccessKey_not: String
+
+  """All values that are contained in given list."""
+  cloudAccessKey_in: [String!]
+
+  """All values that are not contained in given list."""
+  cloudAccessKey_not_in: [String!]
+
+  """All values less than the given value."""
+  cloudAccessKey_lt: String
+
+  """All values less than or equal the given value."""
+  cloudAccessKey_lte: String
+
+  """All values greater than the given value."""
+  cloudAccessKey_gt: String
+
+  """All values greater than or equal the given value."""
+  cloudAccessKey_gte: String
+
+  """All values containing the given string."""
+  cloudAccessKey_contains: String
+
+  """All values not containing the given string."""
+  cloudAccessKey_not_contains: String
+
+  """All values starting with the given string."""
+  cloudAccessKey_starts_with: String
+
+  """All values not starting with the given string."""
+  cloudAccessKey_not_starts_with: String
+
+  """All values ending with the given string."""
+  cloudAccessKey_ends_with: String
+
+  """All values not ending with the given string."""
+  cloudAccessKey_not_ends_with: String
   cloudResourceId: String
 
   """All values that are not equal to given value."""

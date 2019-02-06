@@ -16,10 +16,10 @@
     "dev": "cross-env nodemon -e js,graphql --exec \"npm run lint && babel-node src/index.js\""
   },
   "dependencies": {
+    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
     "@babel/node": "^7.2.2",
     "@babel/polyfill": "^7.2.5",
-    "@babel/cli": "^7.2.3",
     "@babel/preset-env": "^7.3.0",
     "@babel/preset-flow": "^7.0.0",
     "async": "^2.6.1",
@@ -38,6 +38,7 @@
     "prisma-client-lib": "^1.24.0",
     "stripe": "^6.22.0",
     "underscore": "^1.9.1",
+    "uniqid": "^5.0.3",
     "uuid": "^3.3.2"
   },
   "devDependencies": {

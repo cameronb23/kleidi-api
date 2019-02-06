@@ -4,7 +4,8 @@ import {
   deployService,
   fetchCustomResources,
   uploadCustomResource,
-  deleteCustomResource
+  deleteCustomResource,
+  getCurrentKeybotVersion
 } from '../cloud/keybot';
 import { getEntitlements } from '../billing/user';
 import { encryptData, decryptData } from '../crypto';
@@ -34,6 +35,7 @@ const decryptFields = (obj) => {
 };
 
 const Query = {
+  currentKeybotVersion: async (parent, args, context) => getCurrentKeybotVersion(),
   ownedKeybotServices: async (parent, args, context, info) => context.db.query.keybotServices({
     where: {
       owner: {

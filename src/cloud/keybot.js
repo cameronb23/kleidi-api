@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import uniqid from 'uniqid';
 import {
   createTaskDefinition,
   retrieveServiceStatus,
@@ -8,6 +9,18 @@ import {
   getCustomServiceResources,
   deleteFile
 } from './providers/aws';
+
+export const getCurrentKeybotVersion = async () => {
+  const latestTags = await getTagsForObject('keybot-prod', 'releases/release.zip');
+
+  let latestVersion = 'Unavailable';
+
+  if (latestTags) {
+    latestVersion = _.findWhere(latestTags, { Key: 'VERSION' }).Value;
+  }
+
+  return latestVersion;
+}
 
 export const createKeybotService = async (serviceId, serviceName, serviceOwnerId, provider, db) => {
   switch (provider) {
@@ -85,7 +98,8 @@ export const deployService = async (service, credentials, db) => {
   switch (service.cloudProvider) {
     case 'AWS': {
       try {
-        const defArn = await createTaskDefinition(service, credentials);
+        const newAccessKey = uniqid();
+        const defArn = await createTaskDefinition(service, credentials, newAccessKey);
         console.log('Task definition ARN: ', defArn);
         const serviceArn = await deployServiceAws(service, 'arn:aws:ecs:us-east-1:758556097563:cluster/Keybot-Deployment-Cluster'); // cluster ARN
         console.log('Service ARN: ', serviceArn);
@@ -104,6 +118,7 @@ export const deployService = async (service, credentials, db) => {
           data: {
             currentVersion: latestVersion,
             cloudResourceId: serviceArn,
+            cloudAccessKey: newAccessKey,
             currentOperation: 'DEPLOYING',
             currentOperationStatus: 'Deploying new patch to instances'
           }

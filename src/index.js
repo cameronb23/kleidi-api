@@ -50,8 +50,7 @@ const resolvers = {
     AccountResolvers.Query,
     KeybotResolvers.Query,
     ProductResolvers.Query,
-    BillingResolvers.Query
-  ),
+    BillingResolvers.Query),
   Mutation: Object.assign(
     {},
     Mutation,

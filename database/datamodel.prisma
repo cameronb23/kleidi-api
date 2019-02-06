@@ -10,23 +10,23 @@ enum CloudProvider {
 }
 
 enum OperationType {
-  CREATING,
-  INITIALIZING,
-  ALLOCATING,
-  DEPLOYING,
-  RUNNING,
-  SHUTTING_DOWN,
+  CREATING
+  INITIALIZING
+  ALLOCATING
+  DEPLOYING
+  RUNNING
+  SHUTTING_DOWN
   IDLE
 }
 
 enum UpdateMethod {
-  AUTOMATIC,
+  AUTOMATIC
   USER_INITIATED
 }
 
 enum BillingType {
-  ONE_TIME,
-  RECURRING_STATIC, ## 'licensed' plan type
+  ONE_TIME
+  RECURRING_STATIC ## 'licensed' plan type
   RECURRING_USAGE_BASED ## 'metered' plan type
 }
 
@@ -44,17 +44,21 @@ type User {
   password: String!
   name: String!
   roles: [Role]! @relation(name: "UserRoles", link: INLINE)
-  billing: UserBilling @relation(name: "UserBilling" link: INLINE)
+  billing: UserBilling @relation(name: "UserBilling", link: INLINE)
 }
 
 type UserBilling {
   id: ID! @id
   createdAt: DateTime! @createdAt
   stripeCustomerId: String! @unique
-  defaultPaymentMethod: PaymentMethod @relation(name: "DefaultPaymentMethod", link: INLINE)
-  paymentMethods: [PaymentMethod] @relation(name: "BillingPaymentMethods", link: INLINE)
-  associatedPlans: [ProductPlan]! @relation(name: "UserBillingPlans", link: INLINE)
-  subscriptions: [Subscription]! @relation(name: "UserBillingSubscriptions", link: INLINE)
+  defaultPaymentMethod: PaymentMethod
+    @relation(name: "DefaultPaymentMethod", link: INLINE)
+  paymentMethods: [PaymentMethod]
+    @relation(name: "BillingPaymentMethods", link: INLINE)
+  associatedPlans: [ProductPlan]!
+    @relation(name: "UserBillingPlans", link: INLINE)
+  subscriptions: [Subscription]!
+    @relation(name: "UserBillingSubscriptions", link: INLINE)
   forUser: User! @relation(name: "UserBilling")
 }
 
@@ -117,13 +121,15 @@ type KeybotService {
   createdAt: DateTime! @createdAt
   owner: User! @relation(name: "KeybotServiceOwner", link: INLINE)
   cloudProvider: CloudProvider! @default(value: AWS)
+  cloudAccessKey: String
   cloudResourceId: String
   currentOperation: OperationType
   currentOperationStatus: String
   currentVersion: String
   lastDeploy: DateTime
   updateType: UpdateMethod
-  credentials: KeybotCredentials @relation(name: "KeybotServiceCredentials", link: INLINE)
+  credentials: KeybotCredentials
+    @relation(name: "KeybotServiceCredentials", link: INLINE)
   customFiles: Json
 }
 

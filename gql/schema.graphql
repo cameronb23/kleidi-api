@@ -29,6 +29,7 @@ type Query {
   productPlans(productId: String!): [ProductPlan]!
 
   # keybot service queries
+  currentKeybotVersion: String! @isAuthenticated
   ownedKeybotServices: [KeybotService]! @isAuthenticated
   ownedKeybotService(serviceId: String!): [KeybotService]! @isAuthenticated
   keybotServiceCredentials(serviceId: String!): [KeybotCredentials]!
@@ -50,10 +51,6 @@ type Mutation {
   subscribeToPlan(planId: String!): OperationResponse! @isAuthenticated
   cancelSubscription(subscriptionId: String!): OperationResponse!
     @isAuthenticated
-
-  createRole(name: String!, permissions: String): Role!
-  updateRole(id: ID!, name: String, permissions: String): Role!
-  deleteRole(id: ID!): OperationResponse!
 
   # admin mutations
   createProduct(name: String!, forService: ServiceType!): OperationResponse!
@@ -168,6 +165,7 @@ type KeybotService {
   createdAt: DateTime! @private
   owner: User!
   cloudProvider: CloudProvider!
+  cloudAccessKey: String
   cloudResourceId: String @private
   currentOperation: OperationType
   currentOperationStatus: String
