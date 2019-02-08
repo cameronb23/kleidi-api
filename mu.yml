@@ -22,3 +22,6 @@ service:
   pipeline:
     source:
       repo: cameronb23/kleidi-api
+      branch: master
+    build:
+      image: aws/codebuild/nodejs:10.14.1
