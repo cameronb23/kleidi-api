@@ -12,9 +12,13 @@ service:
   name: api-backend
   desiredCount: 1
   maxSize: 3
+  healthEndpoint: /v1/graphql
   dockerfile: ./Dockerfile
   memory: 1000
   port: 3000
   pathPatterns:
     - /*
   discoveryTTL: 5
+  pipeline:
+    source:
+      repo: cameronb23/kleidi-api
