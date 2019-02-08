@@ -13,6 +13,7 @@
     "start": "npm run build && node ./build/index.js",
     "lint": "eslint ./src/*.js",
     "build": "npm run clean && npm run build-babel",
+    "start:prod": "npm run build && npm run start",
     "dev": "cross-env nodemon -e js,graphql --exec \"npm run lint && babel-node src/index.js\""
   },
   "dependencies": {

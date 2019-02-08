@@ -37,5 +37,4 @@ fi
 export CODE_HASH="$(cat code_hash.txt)"
 export AZ="${IP} in AZ-${zone}"
 
-exec yarn build
-exec yarn start
+exec yarn start:prod
