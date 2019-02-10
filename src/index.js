@@ -65,7 +65,7 @@ const resolvers = {
 
 const db = new Prisma({
   typeDefs: path.join(__dirname, '../gql/generated/prisma.graphql'),
-  endpoint: 'http://kleid-Publi-ZCI5HVZ5WG8B-1604481775.us-east-1.elb.amazonaws.com',
+  endpoint: 'http://Kleid-Publi-U30TGEFOA88-1998912792.us-east-1.elb.amazonaws.com',
   secret: process.env.PRISMA_MANAGEMENT_API_SECRET
 });
 
