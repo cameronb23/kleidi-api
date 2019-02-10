@@ -36,7 +36,7 @@ setupCrypt(process.env.APP_SECRET);
 // const SCHEMA_PATH = path.join(__dirname, './schema.graphql');
 
 const serverOptions = {
-  endpoint: '/api/v1/graphql',
+  endpoint: '/v1/graphql',
   port: process.env.PORT || (process.env.NODE_ENV === 'production' ? 80 : 4000),
   uploads: {
     maxFileSize: 10000000
