@@ -37,6 +37,7 @@ setupCrypt(process.env.APP_SECRET);
 
 const serverOptions = {
   endpoint: '/v1/graphql',
+  playground: (process.env.NODE_ENV === 'production' ? false : '/'),
   port: process.env.PORT || (process.env.NODE_ENV === 'production' ? 80 : 4000),
   uploads: {
     maxFileSize: 10000000
